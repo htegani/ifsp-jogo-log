@@ -1,6 +1,8 @@
 {
   "FolderOrderSettings":[],
   "ResourceOrderSettings":[
-    {"name":"Sprite1","order":1,"path":"sprites/Sprite1/Sprite1.yy",},
+    {"name":"oplayer","order":3,"path":"objects/oplayer/oplayer.yy",},
+    {"name":"splayer","order":1,"path":"sprites/splayer/splayer.yy",},
+    {"name":"Sprite2","order":2,"path":"sprites/Sprite2/Sprite2.yy",},
   ],
 }
