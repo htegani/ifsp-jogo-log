@@ -27,7 +27,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"sboos1",
+    "path":"sprites/sboos1/sboos1.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }
