@@ -1,9 +1,9 @@
 {
   "$GMObject":"",
-  "%Name":"obook",
+  "%Name":"oboss1",
   "eventList":[],
   "managed":true,
-  "name":"obook",
+  "name":"oboss1",
   "overriddenProperties":[],
   "parent":{
     "name":"devs-labyrinth",
@@ -27,10 +27,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"sbook",
-    "path":"sprites/sbook/sbook.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }
