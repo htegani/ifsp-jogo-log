@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_global",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_global",
+  "parent":{
+    "name":"devs-labyrinth",
+    "path":"devs-labyrinth.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
