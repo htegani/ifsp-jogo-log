@@ -9,8 +9,8 @@ if (y < room_height / 2) {
 global.ret_sc_x = x + retorno_dx;
 global.ret_sc_y = y + retorno_dy;
 
-// Descobre qual das 35 salas é esta
-var slot = global.corredor_atual * 5 + (numero_sala - 1);
+// Descobre qual das 70 salas é esta
+var slot = global.corredor_atual * 10 + (numero_sala - 1);
 global.slot_atual = slot;
 
 // Usa o tipo de sala sorteado no início do jogo

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_robot_try_spawn",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_robot_try_spawn",
+  "parent":{
+    "name":"devs-labyrinth",
+    "path":"devs-labyrinth.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
