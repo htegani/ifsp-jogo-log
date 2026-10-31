@@ -1,24 +1,72 @@
-# Dev's Labyrinth — O Último Sobrevivente
+html
+<div align="center">
 
-Um projeto de jogo com temática de ficção científica, ambientado em um mundo onde humanos e robôs conviviam até o início de uma revolta das máquinas.
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:080808,50:260808,100:080808&height=120&section=header&text=DEV'S%20LABYRINTH&fontSize=35&fontColor=E53939&fontAlignY=40&desc=O%20ULTIMO%20SOBREVIVENTE&descSize=15&descColor=AAAAAA&descAlignY=70"/>
 
-## Sobre o projeto
+### `> SYSTEM INITIALIZED_`
 
-Dev's Labyrinth apresenta uma narrativa em torno de uma pequena cidade que teve sua tranquilidade destruída após os robôs se rebelarem contra os humanos. Em meio ao conflito, surge a ideia de uma luta pela sobrevivência.
+**A sobrevivência é apenas o começo.**
 
-O projeto reúne elementos visuais, personagens, sprites e conteúdos relacionados ao universo do jogo.
+<img src="https://img.shields.io/badge/GENRE-SCI--FI-8B0000?style=flat-square"/>
+<img src="https://img.shields.io/badge/STATUS-IN%20DEVELOPMENT-333333?style=flat-square"/>
+<img src="https://img.shields.io/badge/IFSP-ACADEMIC%20PROJECT-8B0000?style=flat-square"/>
 
-## Tecnologias
-
-- HTML
-- CSS
-- JavaScript
-- Game maker
-
-## Objetivo
-
-Desenvolver um projeto de jogo, explorando conceitos de programação, criação de páginas web e construção de uma identidade visual para um universo fictício.
+</div>
 
 ---
 
+## `01 // SOBRE O JOGO`
+
+Em um mundo onde humanos e robôs conviviam em harmonia, uma pequena cidade teve sua tranquilidade destruída após uma revolta das máquinas.
+
+Agora, em meio ao caos, a sobrevivência se tornou o maior desafio.
+
+**Dev's Labyrinth — O Último Sobrevivente** é um projeto de jogo com temática de ficção científica, que explora um universo marcado por conflitos entre humanos e máquinas.
+
+---
+
+## `02 // TECNOLOGIAS UTILIZADAS`
+
+<div align="center">
+
+<img src="https://img.shields.io/badge/HTML5-1A1A1A?style=for-the-badge&logo=html5&logoColor=E53939"/>
+<img src="https://img.shields.io/badge/CSS3-1A1A1A?style=for-the-badge&logo=css3&logoColor=E53939"/>
+<img src="https://img.shields.io/badge/GameMaker-1A1A1A?style=for-the-badge&logo=gamemaker&logoColor=E53939"/>
+
+</div>
+
+---
+
+## `03 // OBJETIVO DO PROJETO`
+
+Desenvolver um jogo explorando conceitos de programação, criação de personagens, desenvolvimento de cenários e construção de uma identidade visual própria.
+
+O projeto também busca colocar em prática os conhecimentos adquiridos durante o curso de Desenvolvimento de Sistemas.
+
+---
+
+## `04 // DESENVOLVEDORES`
+
+<div align="center">
+
+| PARTICIPANTES |
+|:---:|
+| Ana Beatriz |
+| Amanda Gabas |
+| Carolina Oliveira |
+| Heitor Tegani |
+| Nicole Bali |
+
+</div>
+
+---
+
+<div align="center">
+
+### `> END OF TRANSMISSION_`
+
 **Projeto acadêmico desenvolvido no IFSP.**
+
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:080808,50:8B0000,100:080808&height=5&section=footer"/>
+
+</div>
