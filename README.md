@@ -1,4 +1,4 @@
-html
+
 <div align="center">
 
 <img src="https://capsule-render.vercel.app/api?type=rect&color=0:080808,50:260808,100:080808&height=120&section=header&text=DEV'S%20LABYRINTH&fontSize=35&fontColor=E53939&fontAlignY=40&desc=O%20ULTIMO%20SOBREVIVENTE&descSize=15&descColor=AAAAAA&descAlignY=70"/>
