@@ -8,11 +8,6 @@
     <title>Dark Legacy | O Último Sobrevivente</title>
 
     <style>
-
-        /* =====================================================
-           PALETA DE CORES - TONS NEUTROS
-        ===================================================== */
-
         :root {
             --preto: #111111;
             --preto-2: #1a1a1a;
@@ -28,12 +23,6 @@
             --branco: #eeeeee;
             --branco-escuro: #c8c8c8;
         }
-
-
-        /* =====================================================
-           CONFIGURAÇÕES GERAIS
-        ===================================================== */
-
         * {
             margin: 0;
             padding: 0;
@@ -55,11 +44,6 @@
             max-width: 100%;
             display: block;
         }
-
-
-        /* =====================================================
-           CARROSSEL NO TOPO
-        ===================================================== */
 
         .carrossel-topo {
             position: relative;
@@ -925,17 +909,56 @@
             }
         }
 
+        .carrossel-topo {
+    height: clamp(300px, 55vw, 600px);
+}
+
+video {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+}
+
+
+.titulo h2 {
+    font-size: clamp(25px, 5vw, 40px);
+}
+
+nav ul {
+    justify-content: center;
+}
+
+nav a {
+    padding: 10px 8px;
+    font-size: 10px;
+}
+
+@media (max-width: 600px) {
+    section {
+        width: 92%;
+        padding: 45px 0;
+    }
+
+    .historia-texto {
+        padding: 20px;
+    }
+
+    .personagem-info {
+        padding: 20px;
+    }
+
+    .hero h1 {
+        font-size: clamp(35px, 10vw, 60px);
+    }
+}
+
     </style>
 
 </head>
 
 
 <body>
-
-
-    <!-- =====================================================
-         CARROSSEL NO TOPO
-    ====================================================== -->
 
     <div class="carrossel-topo">
 
