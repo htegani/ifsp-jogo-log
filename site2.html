@@ -245,13 +245,12 @@ html = r'''<!DOCTYPE html>
   <nav class="navbar" aria-label="Navegação principal">
     <div class="nav-inner">
       <div class="nav-top">
-        <a class="brand" href="#top">Ossos do Ofício<br>Raízes de uma história</a>
+        <a class="brand" href="#top">Dev's labyrinth<br>Raízes de uma história</a>
         <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navLinks">Menu ☰</button>
       </div>
       <ul class="nav-links" id="navLinks">
         <li><a href="#prefacio">Prefácio</a></li>
         <li><a href="#personagens">Personagens</a></li>
-        <li><a href="#fases">Fases</a></li>
         <li><a href="#storyboards">Storyboards</a></li>
         <li><a href="#tutoriais">Tutoriais</a></li>
         <li><a href="#recursos">Códigos e recursos</a></li>
@@ -264,14 +263,14 @@ html = r'''<!DOCTYPE html>
     <div class="slides" id="slides">
       <div class="slide">
         <img src="devs-labyrinth/images/cidade.png" alt="Cidade">
-        <div class="slide-caption"><span class="eyebrow">Uma aventura de conhecimento</span><h1>Jogue já!</h1><p>Venha conosco se aventurar no universo de Ossos do Ofício.</p></div>
+        <div class="slide-caption"><span class="eyebrow">Uma aventura de conhecimento</span><h1>Jogue já!</h1><p>Venha conosco se aventurar nesse labirinto.</p></div>
       </div>
       <div class="slide">
-        <img src="devs-labyrinth/images/humanos e robos.jpg" alt="Humanos e robôs">
+       <img src="devs-labyrinth/images/humanos e robos.jpg" alt="Humanos e robôs">
         <div class="slide-caption"><span class="eyebrow">Conheça quem faz parte da jornada</span><h1>Personagens</h1><p>Desvende os segredos de um mundo transformado por dois apocalipses.</p></div>
       </div>
       <div class="slide">
-        <img src="cenario.carros.jpeg" alt="Cenário com carros">
+        <img src="devs-labyrinth/images/cidade em guerra.jpeg" alt="Cidade em guerra">
         <div class="slide-caption"><span class="eyebrow">Aprenda jogando</span><h1>Vença os desafios</h1><p>Resolva desafios matemáticos, conheça elementos e ajude a salvar vidas.</p></div>
       </div>
       <div class="slide">
@@ -305,14 +304,15 @@ html = r'''<!DOCTYPE html>
 
   <main>
     <section class="section" id="prefacio">
-      <div class="section-heading"><h2>Prefácio</h2><p>Honrar os ossos do ofício de um falecido pai. Quem diria que isso representaria a salvação da humanidade?</p></div>
+      <div class="section-heading"><h2>Prefácio</h2><p>Agora, em meio ao caos, a sobrevivência se tornou o maior desafio.</p></div>
       <div class="story-grid">
         <div class="story-copy">
-          <h3>Dois apocalipses, uma esperança</h3>
-          <p>Quando a Terra foi atingida por dois apocalipses simultâneos, o pesar de um possível futuro próspero recaiu sobre as costas do protagonista. Diante dessas novas ameaças, o jovem sai da grande cidade de São Paulo em direção ao coração da Amazônia, onde a fazenda de seu pai permanece intocada desde sua morte.</p>
-          <p>A fazenda logo se mostra equipada com um antigo laboratório e uma biblioteca empoeirada, repleta de livros didáticos e anotações.</p>
-          <p>Os dois apocalipses funcionam em conjunto para ameaçar a humanidade. Ambos os vírus surgiram em decorrência do derretimento das geleiras, provocado pelo aquecimento global. As geleiras milenares continham vírus desconhecidos, que se tornaram uma nova ameaça mundial.</p>
-          <p>Acompanhe nosso protagonista na busca pela cura: use matemática, química e alquimia, desvende segredos, reúna conhecimentos e encontre aliados pelo caminho.</p>
+          <h3>Uma guerra, uma esperança</h3>
+          <p>Em um mundo onde humanos e robôs conviviam em harmonia, uma pequena cidade teve sua tranquilidade destruída após uma revolta das máquinas..</p>
+          <p>Dev's Labyrinth — O Último Sobrevivente é um projeto de jogo com temática de ficção científica, que explora um universo marcado por conflitos entre humanos e máquinas.
+
+</p>
+          
           <p class="question">Você acha que é capaz de salvar o mundo?</p>
         </div>
         <div class="story-image"><img src="cenario.apocalipse.jpeg" alt="Paisagem do mundo durante o apocalipse"></div>
@@ -336,23 +336,6 @@ html = r'''<!DOCTYPE html>
         </article>
       </div>
     </section>
-
-    <div class="phases-wrap" id="fases">
-      <section class="section">
-        <div class="section-heading"><h2>Fases</h2><p>Cenas principais do jogo: veja um pouco do que acontece por trás das cortinas.</p></div>
-        <div class="phase-grid">
-          <article class="phase-card"><img src="WhatsApp Image 2025-11-06 at 19.28.31 (1).jpeg" alt="Encontro com a criança"><div><h3>Primeira fase</h3><p>Encontro com a criança.</p></div></article>
-          <article class="phase-card"><img src="WhatsApp Image 2025-11-06 at 19.28.32.jpeg" alt="Desafio de matemática da primeira fase"><div><h3>Primeira fase</h3><p>Resolva uma conta matemática.</p></div></article>
-          <article class="phase-card"><img src="WhatsApp Image 2025-11-06 at 19.28.32 (1).jpeg" alt="Cura da criança"><div><h3>Primeira fase</h3><p>Cura da criança.</p></div></article>
-          <article class="phase-card"><img src="fase2.conta matematica.jpeg" alt="Desafio matemático da segunda fase"><div><h3>Segunda fase</h3><p>Resolva uma conta matemática.</p></div></article>
-          <article class="phase-card"><img src="fase2.fazendo antidoto.jpeg" alt="Preparação do antídoto"><div><h3>Segunda fase</h3><p>Fazendo o antídoto.</p></div></article>
-          <article class="phase-card"><img src="fase2.distribuindo.jpeg" alt="Distribuição do antídoto"><div><h3>Segunda fase</h3><p>Distribuindo o antídoto.</p></div></article>
-          <article class="phase-card"><img src="fase3.balaça.jpeg" alt="Desafio da balança"><div><h3>Terceira fase</h3><p>Desafio da balança.</p></div></article>
-          <article class="phase-card"><img src="fase3.proveta.jpeg" alt="Desafio da proveta"><div><h3>Terceira fase</h3><p>Desafio da proveta.</p></div></article>
-          <article class="phase-card"><img src="fase3.antidoto pronto.jpeg" alt="Antídoto pronto"><div><h3>Terceira fase</h3><p>Criação do antídoto.</p></div></article>
-        </div>
-      </section>
-    </div>
 
     <section class="section" id="storyboards">
       <div class="section-heading"><h2>Storyboards</h2><p>Veja a introdução, o desenvolvimento e a conclusão visual da história.</p></div>
