@@ -1,374 +1,933 @@
-from pathlib import Path
-
-html = r'''<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101b13">
-  <title>Dev's Labyrinth | Uma guerra muda tudo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg: #1a1a1a;
-      --bg-soft: #111111;
-      --panel: #292929;
-      --panel-light: #3b3b3b;
-      --green: #8a8a8a;
-      --green-light: #4a1717;
-      --copper: #7d2525;
-      --copper-light: #ec1a1a;
-      --cream: #b93737;
-      --muted: #eeeeee;
-      --line: rgba(#c8c8c8);
-      --shadow: 0 18px 45px rgba(223, 25, 25, 0.35);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; scroll-padding-top: 82px; }
-    body {
-      background: var(--bg);
-      color: var(--cream);
-      font: 16px/1.7 "Lato", sans-serif;
-    }
-    img, video { max-width: 100%; display: block; }
-    a { color: var(--copper-light); }
-    button { font: inherit; }
-
-    /* Menu */
-    .navbar {
-      position: sticky; top: 0; z-index: 1000;
-      background: rgba(12, 21, 14, .96);
-      border-bottom: 1px solid var(--line);
-      box-shadow: 0 5px 24px rgba(0,0,0,.28);
-      backdrop-filter: blur(12px);
-    }
-    .nav-inner {
-      width: min(1400px, 94%); min-height: 68px; margin: auto;
-      display: flex; align-items: center; justify-content: space-between; gap: 22px;
-    }
-    .brand {
-      color: var(--copper-light); text-decoration: none;
-      font: 800 13px/1.3 "Montserrat", sans-serif; letter-spacing: 1.4px;
-      text-transform: uppercase; max-width: 270px;
-    }
-    .nav-links { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; list-style: none; }
-    .nav-links a {
-      display: block; padding: 23px 12px; color: var(--cream);
-      text-decoration: none; font: 700 11px "Montserrat", sans-serif;
-      letter-spacing: 1px; text-transform: uppercase; transition: .25s;
-    }
-    .nav-links a:hover, .nav-links a:focus-visible { color: var(--copper-light); background: rgba(193,138,88,.1); }
-    .menu-toggle {
-      display: none; border: 1px solid var(--line); color: var(--cream);
-      background: var(--panel); padding: 8px 12px; cursor: pointer;
-    }
-
-    /* Carrossel */
-    .carousel {
-      height: min(72vh, 690px); min-height: 390px; position: relative;
-      overflow: hidden; background: #050805; border-bottom: 3px solid var(--copper);
-    }
-    .slides { height: 100%; display: flex; transition: transform .65s ease; }
-    .slide { min-width: 100%; height: 100%; position: relative; }
-    .slide img { width: 100%; height: 100%; object-fit: cover; opacity: .78; }
-    .slide::after {
-      content: ""; position: absolute; inset: 0;
-      background: linear-gradient(90deg, rgba(8,16,10,.82), rgba(8,16,10,.08) 85%),
-                  linear-gradient(0deg, rgba(8,16,10,.7), transparent 55%);
-    }
-    .slide-caption { position: absolute; z-index: 2; left: max(7%, calc((100% - 1200px)/2)); bottom: 90px; max-width: 650px; }
-    .eyebrow { color: var(--copper-light); font: 700 11px "Montserrat", sans-serif; letter-spacing: 4px; text-transform: uppercase; }
-    .slide-caption h1 { margin: 12px 0; font: 800 clamp(30px, 5vw, 62px)/1.08 "Montserrat", sans-serif; text-transform: uppercase; }
-    .slide-caption p { color: #e0dfd5; font-size: clamp(15px, 1.8vw, 19px); max-width: 560px; }
-    .carousel-arrow {
-      position: absolute; z-index: 5; top: 50%; transform: translateY(-50%);
-      width: 48px; height: 58px; border: 1px solid rgba(255,255,255,.35);
-      background: rgba(10,18,12,.65); color: white; font-size: 28px; cursor: pointer;
-      transition: .2s;
-    }
-    .carousel-arrow:hover { background: var(--green); border-color: var(--copper); }
-    .prev { left: 18px; } .next { right: 18px; }
-    .dots { position: absolute; z-index: 6; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
-    .dot { width: 11px; height: 11px; border: 0; border-radius: 50%; background: #888; cursor: pointer; }
-    .dot.active { background: var(--copper-light); outline: 2px solid rgba(224,177,126,.35); outline-offset: 3px; }
-
-    /* Abertura e seções */
-    .hero {
-      min-height: 430px; display: grid; place-items: center; text-align: center; padding: 90px 6%;
-      background: radial-gradient(ellipse at center, rgba(49,75,50,.55), transparent 65%), var(--bg-soft);
-      border-bottom: 1px solid var(--line);
-    }
-    .hero-content { max-width: 900px; }
-    .hero h2 { font: 900 clamp(36px, 7vw, 76px)/1.1 "Montserrat", sans-serif; letter-spacing: 3px; text-transform: uppercase; }
-    .hero p { max-width: 720px; margin: 22px auto 30px; color: var(--muted); font-size: 19px; }
-    .button {
-      display: inline-block; padding: 13px 25px; border: 1px solid var(--copper);
-      background: var(--green); color: var(--cream); text-decoration: none;
-      font: 700 12px "Montserrat", sans-serif; letter-spacing: 1.5px; text-transform: uppercase;
-      transition: .25s;
-    }
-    .button:hover { background: var(--copper); color: #17130e; transform: translateY(-3px); }
-    .section { width: min(1200px, 90%); margin: auto; padding: 88px 0; }
-    .section-heading { text-align: center; margin-bottom: 46px; }
-    .section-heading h2 { font: 800 clamp(27px, 4vw, 40px) "Montserrat", sans-serif; text-transform: uppercase; letter-spacing: 2px; }
-    .section-heading::after { content: ""; display: block; width: 72px; height: 3px; background: var(--copper); margin: 17px auto; }
-    .section-heading p { color: var(--muted); }
-    .section-lead { color: var(--muted); max-width: 900px; margin: -18px auto 38px; text-align: center; }
-
-    /* História */
-    .story-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 35px; align-items: center; }
-    .story-copy {
-      padding: clamp(24px, 4vw, 42px); background: linear-gradient(145deg, var(--panel-light), var(--panel));
-      border-left: 4px solid var(--copper); box-shadow: var(--shadow);
-    }
-    .story-copy h3 { color: var(--copper-light); font: 700 25px "Montserrat", sans-serif; margin-bottom: 17px; }
-    .story-copy p { color: #d5d2c6; margin-bottom: 14px; }
-    .story-image img { width: 100%; height: 430px; object-fit: cover; border: 1px solid var(--line); box-shadow: var(--shadow); }
-    .question { text-align: center; color: var(--copper-light); font: 700 19px "Montserrat", sans-serif; margin-top: 30px; }
-
-    /* Personagens */
-    .character-grid, .phase-grid, .sprite-grid, .info-grid { display: grid; gap: 22px; }
-    .character-grid { grid-template-columns: repeat(3, 1fr); }
-    .character-card {
-      overflow: hidden; background: var(--panel); border: 1px solid var(--line);
-      box-shadow: var(--shadow); transition: transform .25s, border-color .25s;
-    }
-    .character-card:hover { transform: translateY(-6px); border-color: var(--copper); }
-    .character-card img { width: 100%; height: 310px; object-fit: cover; }
-    .character-content { padding: 23px; }
-    .character-content h3 { color: var(--copper-light); font: 700 23px "Montserrat", sans-serif; }
-    .character-content p { color: var(--muted); margin-top: 9px; }
-    .character-more {
-      margin-top: 15px; padding: 9px 13px; color: var(--cream); background: transparent;
-      border: 1px solid var(--line); cursor: pointer;
-    }
-    .character-more:hover { border-color: var(--copper); color: var(--copper-light); }
-    .character-extra { display: none; padding-top: 12px; color: #d5d2c6; }
-    .character-extra.open { display: block; }
-
-    /* Fases e imagens */
-    .phases-wrap { background: linear-gradient(180deg, #1b2a1d, #111a13); border-block: 1px solid var(--line); }
-    .phase-grid { grid-template-columns: repeat(3, 1fr); }
-    .phase-card { background: #f1e8d8; color: #263026; overflow: hidden; box-shadow: var(--shadow); }
-    .phase-card img { width: 100%; height: 220px; object-fit: cover; }
-    .phase-card div { padding: 17px; }
-    .phase-card h3 { color: #684421; font: 800 15px "Montserrat", sans-serif; text-transform: uppercase; }
-    .phase-card p { margin-top: 5px; color: #4c5148; }
-
-    /* Storyboards */
-    .tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 25px; }
-    .tab-button { padding: 12px 17px; background: var(--panel); color: var(--cream); border: 1px solid var(--line); cursor: pointer; }
-    .tab-button.active, .tab-button:hover { background: var(--green); border-color: var(--copper); }
-    .tab-panel { display: none; padding: 25px; background: var(--panel); border: 1px solid var(--line); text-align: center; }
-    .tab-panel.active { display: block; }
-    .tab-panel h3 { color: var(--copper-light); font: 700 22px "Montserrat", sans-serif; margin-bottom: 15px; }
-    .tab-panel img { max-height: 620px; width: auto; margin: auto; object-fit: contain; }
-    .tab-panel p { margin-top: 18px; color: var(--muted); font-style: italic; }
-
-    /* Vídeos e instalação */
-    .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-    .video-card, .download-card, .code-panel { background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
-    .video-card h3, .download-card h3 { padding: 18px 20px; color: var(--copper-light); font: 700 17px "Montserrat", sans-serif; }
-    .video-card video { width: 100%; aspect-ratio: 16 / 9; background: #050805; }
-    .video-card p { padding: 14px 20px; color: var(--muted); }
-    .download-card { margin-top: 25px; padding: 25px; }
-    .download-card p { color: var(--muted); margin: 8px 0 16px; }
-    .download-links { display: flex; flex-wrap: wrap; gap: 12px; }
-
-    /* Código e recursos */
-    .accordion-item { margin-bottom: 12px; border: 1px solid var(--line); background: var(--panel); }
-    .accordion-trigger {
-      width: 100%; padding: 17px 20px; text-align: left; border: 0;
-      background: var(--green); color: var(--cream); cursor: pointer;
-      font: 700 14px "Montserrat", sans-serif;
-    }
-    .accordion-trigger:hover { background: #3d5a3e; }
-    .accordion-content { display: none; padding: 22px; color: #d5d2c6; }
-    .accordion-content.open { display: block; }
-    .accordion-content ul, .accordion-content ol { padding-left: 22px; }
-    .accordion-content li { margin: 8px 0; }
-    pre {
-      overflow-x: auto; white-space: pre-wrap; overflow-wrap: anywhere;
-      padding: 18px; background: #0c120d; color: #d7d9c9;
-      border: 1px solid #40513f; font: 13px/1.55 Consolas, monospace;
-    }
-    .ingredient-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-    .ingredient { padding: 20px; background: var(--bg-soft); border-top: 3px solid var(--copper); }
-    .ingredient h3 { color: var(--copper-light); margin-bottom: 8px; font: 700 17px "Montserrat", sans-serif; }
-
-    /* Contato e rodapé */
-    .contact-box { max-width: 780px; margin: auto; padding: 28px; background: var(--panel); border: 1px solid var(--line); text-align: center; }
-    .contact-box p { margin: 7px 0; color: var(--muted); }
-    footer { padding: 38px 5%; text-align: center; background: #0a100b; border-top: 2px solid var(--copper); color: var(--muted); }
-    footer strong { color: var(--copper-light); }
-    .back-top { display: inline-block; margin-bottom: 15px; text-decoration: none; }
-
-    @media (max-width: 900px) {
-      .nav-inner { align-items: flex-start; padding: 14px 0; }
-      .nav-links { justify-content: center; }
-      .nav-links a { padding: 12px 9px; }
-      .story-grid { grid-template-columns: 1fr; }
-      .character-grid, .phase-grid { grid-template-columns: repeat(2, 1fr); }
-      .ingredient-list { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 620px) {
-      .nav-inner { display: block; }
-      .nav-top { display: flex; align-items: center; justify-content: space-between; }
-      .menu-toggle { display: block; }
-      .nav-links { display: none; flex-direction: column; align-items: stretch; padding-top: 8px; }
-      .nav-links.open { display: flex; }
-      .nav-links a { padding: 11px 5px; text-align: center; }
-      .carousel { height: 440px; min-height: 0; }
-      .slide-caption { left: 8%; right: 8%; bottom: 75px; }
-      .slide-caption h1 { font-size: 32px; }
-      .carousel-arrow { width: 38px; height: 46px; font-size: 22px; }
-      .prev { left: 8px; } .next { right: 8px; }
-      .hero { min-height: 350px; padding: 65px 6%; }
-      .hero p { font-size: 16px; }
-      .section { padding: 62px 0; }
-      .character-grid, .phase-grid, .video-grid { grid-template-columns: 1fr; }
-      .character-card img { height: 280px; }
-      .story-image img { height: 290px; }
-      .tab-button { flex: 1 1 100%; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
-    }
-  </style>
+    <title>Site oficial Ossos do Ofício: raízes de uma história</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+    <style>
+        /* Estilos Globais do Corpo */
+        body {
+            font: 400 15px/1.8 Lato, sans-serif;
+            color: #3e2411; /* Cor de texto principal (marrom) */
+        }
+        
+        /* Estilos de Títulos */
+        h3, h4 {
+            margin: 10px 0 30px 0;
+            letter-spacing: 10px;
+            font-size: 20px;
+            color: #111;
+        }
+        
+        /* Padding de Seções/Containers */
+        .container {
+            padding: 80px 120px;
+        }
+        
+        /* Estilos para Imagens de Personagens */
+        .person {
+            border: 10px solid transparent;
+            margin-bottom: 25px;
+            width: 80%;
+            height: 80%;
+            opacity: 0.7;
+        }
+        
+        .person:hover {
+            border-color: #af6403; /* Cor da borda ao passar o mouse */
+        }
+        
+        /* Estilos do Carousel */
+        .carousel-inner img {
+            filter: grayscale(10%); /* Suaviza o filtro em 10% */
+            width: 100%;
+            margin: auto;
+        }
+        
+        .carousel-caption h3 {
+            color: #ffffff !important;
+        }
+        
+        /* Media Query para telas pequenas (esconde legenda) */
+        @media (max-width: 600px) {
+            .carousel-caption {
+                display: none;
+            }
+        }
+        
+        /* Estilo de Fundo 1 (Seção FASES) */
+        .bg-1 {
+            background: #804011; /* Fundo Marrom Escuro */
+            color: #bdbdbd;
+        }
+        
+        .bg-1 h3 {
+            color: #fff4f4;
+        }
+        
+        .bg-1 p {
+            font-style: italic;
+        }
+        
+        /* Estilos de Miniaturas (Thumbnails) */
+        .thumbnail {
+            padding: 0 0 15px 0;
+            border: none;
+            border-radius: 0;
+        }
+        
+        .thumbnail p {
+            margin-top: 15px;
+            color: #01280c;
+        }
+        
+        /* Estilos de Botões Padrão */
+        .btn {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #f1f1f1;
+            border-radius: 0;
+            transition: .2s;
+        }
+        
+        .btn:hover, .btn:focus {
+            border: 1px solid #333;
+            background-color: #fff;
+            color: #000;
+        }
+        
+        /* Estilos da Modal (Não usada no corpo do HTML fornecido, mas mantida) */
+        .modal-header, h4, .close {
+            background-color: #333;
+            color: #fff !important;
+            text-align: center;
+            font-size: 30px;
+        }
+        
+        .modal-header, .modal-body {
+            padding: 40px 50px;
+        }
+        
+        /* Estilos de Abas de Navegação (Storyboards) */
+        .nav-tabs li a {
+            color: #0b4925;
+        }
+        
+        /* Estilos do Mapa do Google (Placeholder) */
+        #googleMap {
+            width: 100%;
+            height: 400px;
+            filter: grayscale(100%);
+        }
+        
+        /* Estilos da Barra de Navegação (Navbar) */
+        .navbar {
+            font-family: Montserrat, sans-serif;
+            margin-bottom: 0;
+            background-color: #021608; /* Fundo Verde Musgo Escuro */
+            border: 0;
+            font-size: 11px !important;
+            letter-spacing: 4px;
+            opacity: 0.9;
+        }
+        
+        /* Links da Navbar */
+        .navbar li a, .navbar .navbar-brand {
+            color: #e2ab70 !important; /* Cor Cobre/Bronze para Links */
+        }
+        
+        .navbar-nav li a:hover {
+            color: #fffcf9 !important;
+        }
+        
+        .navbar-nav li.active a {
+            color: #ffffff !important;
+            background-color: #8a3e07 !important; /* Fundo Laranja/Marrom para Ativo */
+        }
+        
+        .navbar-default .navbar-toggle {
+            border-color: transparent;
+        }
+        
+        /* Estilos do Dropdown */
+        .open .dropdown-toggle {
+            color: #fff;
+            background-color: #04330b !important;
+        }
+        
+        .dropdown-menu li a {
+            color: #3e1601 !important;
+        }
+        
+        .dropdown-menu li a:hover {
+            background-color: rgb(191, 90, 2) !important;
+        }
+        
+        /* Estilos do Rodapé */
+        footer {
+            background-color: #273b23; /* Fundo Verde Escuro */
+            color: #f5f5f5;
+            padding: 32px;
+        }
+        
+        footer a {
+            color: #db9f75; /* Cor Cobre/Bronze para Links no Rodapé */
+        }
+        
+        footer a:hover {
+            color: #804012;
+            text-decoration: none;
+        }
+        
+        /* Estilos de Formulário */
+        .form-control {
+            border-radius: 0;
+        }
+        
+        textarea {
+            resize: none;
+        }
+    </style>
 </head>
 
-<body id="top">
-  <nav class="navbar" aria-label="Navegação principal">
-    <div class="nav-inner">
-      <div class="nav-top">
-        <a class="brand" href="#top">Dev's labyrinth<br>Raízes de uma história</a>
-        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navLinks">Menu ☰</button>
-      </div>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#prefacio">Prefácio</a></li>
-        <li><a href="#personagens">Personagens</a></li>
-        <li><a href="#storyboards">Storyboards</a></li>
-        <li><a href="#tutoriais">Tutoriais</a></li>
-        <li><a href="#recursos">Códigos e recursos</a></li>
-        <li><a href="#contato">Contato</a></li>
-      </ul>
-    </div>
-  </nav>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="50">
 
-  <div class="carousel" aria-label="Destaques do jogo">
-    <div class="slides" id="slides">
-      <div class="slide">
-        <img src="devs-labyrinth/images/cidade.png" alt="Cidade">
-        <div class="slide-caption"><span class="eyebrow">Uma aventura de conhecimento</span><h1>Jogue já!</h1><p>Venha conosco se aventurar nesse labirinto.</p></div>
-      </div>
-      <div class="slide">
-       <img src="devs-labyrinth/images/humanos e robos.jpg" alt="Humanos e robôs">
-        <div class="slide-caption"><span class="eyebrow">Conheça quem faz parte da jornada</span><h1>Personagens</h1><p>Desvende os segredos de um mundo transformado por dois apocalipses.</p></div>
-      </div>
-      <div class="slide">
-        <img src="devs-labyrinth/images/cidade em guerra.jpeg" alt="Cidade em guerra">
-        <div class="slide-caption"><span class="eyebrow">Aprenda jogando</span><h1>Vença os desafios</h1><p>Resolva desafios matemáticos, conheça elementos e ajude a salvar vidas.</p></div>
-      </div>
-      <div class="slide">
-        <img src="cenario.ponte.jpeg" alt="Cenário de uma ponte">
-        <div class="slide-caption"><span class="eyebrow">Conhecimento é a chave</span><h1>Ajude Abel</h1><p>Participe da criação de poções e descubra os mistérios da alquimia.</p></div>
-      </div>
-      <div class="slide">
-        <img src="cenario.apocalipse.jpeg" alt="Cenário do apocalipse">
-        <div class="slide-caption"><span class="eyebrow">O destino está em suas mãos</span><h1>Embarque na aventura</h1><p>Conheça o jogo e descubra se você consegue salvar o mundo.</p></div>
-      </div>
-    </div>
-    <button class="carousel-arrow prev" id="prevSlide" aria-label="Imagem anterior">‹</button>
-    <button class="carousel-arrow next" id="nextSlide" aria-label="Próxima imagem">›</button>
-    <div class="dots" id="dots" aria-label="Escolher imagem">
-      <button class="dot active" aria-label="Ir para imagem 1"></button>
-      <button class="dot" aria-label="Ir para imagem 2"></button>
-      <button class="dot" aria-label="Ir para imagem 3"></button>
-      <button class="dot" aria-label="Ir para imagem 4"></button>
-      <button class="dot" aria-label="Ir para imagem 5"></button>
-    </div>
-  </div>
-
-  <header class="hero">
-    <div class="hero-content">
-      <span class="eyebrow">Dev's Labyrinth | Uma guerra muda tudo</span>
-      <h2>Uma busca pela liberdade</h2>
-      <p>Os corredos da escola viraram um labirinto, sera que você consegue sair de lá?.</p>
-      <a class="button" href="#prefacio">Conhecer a história</a>
-    </div>
-  </header>
-
-  <main>
-    <section class="section" id="prefacio">
-      <div class="section-heading"><h2>Prefácio</h2><p>Agora, em meio ao caos, a sobrevivência se tornou o maior desafio.</p></div>
-      <div class="story-grid">
-        <div class="story-copy">
-          <h3>Uma guerra, uma esperança</h3>
-          <p>Em um mundo onde humanos e robôs conviviam em harmonia, uma pequena cidade teve sua tranquilidade destruída após uma revolta das máquinas..</p>
-          <p>Dev's Labyrinth — O Último Sobrevivente é um projeto de jogo com temática de ficção científica, que explora um universo marcado por conflitos entre humanos e máquinas.
-
-</p>
-          
-          <p class="question">Você acha que é capaz de salvar o mundo?</p>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#myPage">Ossos do Ofício: raízes de uma história</a>
+            </div>
+            
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#myPage">INÍCIO</a></li>
+                    <li><a href="#band">PREFÁCIO</a></li>
+                    <li><a href="#tour">FASES</a></li>
+                    <li><a href="#contact">CONTATO</a></li>
+                    <li><a href="#storyboard_section">STORYBOARDS</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            MORE
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#tutorial_gameplay">Tutorial de Gameplay</a></li>
+                            <li><a href="#tutorial_instalação">Tutorial de Instalação</a></li>
+                            <li><a href="#game_codes">Linhas de Código</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><span class="glyphicon glyphicon-search"></span></a></li>
+                </ul>
+            </div>
         </div>
-        <div class="story-image"><img src="cenario.apocalipse.jpeg" alt="Paisagem do mundo durante o apocalipse"></div>
-      </div>
-    </section>
+    </nav>
 
-    <section class="section" id="personagens">
-      <div class="section-heading"><h2>Personagens</h2><p>Conheça alguns dos aliados que fazem parte dessa jornada.</p></div>
-      <div class="character-grid">
-        <article class="character-card">
-          <img src="lili.jpeg" alt="Lílian, também chamada de Líli">
-          <div class="character-content"><h3>Lílian (Líli)</h3><p>Com 8 anos, ela é pura energia em miniatura.</p><button class="character-more" aria-expanded="false">Conhecer personagem +</button><div class="character-extra">Seu passatempo favorito é praticar esportes, especialmente pular corda e correr.</div></div>
-        </article>
-        <article class="character-card">
-          <img src="abel.jpeg" alt="Abel">
-          <div class="character-content"><h3>Abel</h3><p>Um cientista de 19 anos em busca de respostas.</p><button class="character-more" aria-expanded="false">Conhecer personagem +</button><div class="character-extra">Busca a verdade nas raízes da botânica e nos mistérios dos livros antigos de alquimia.</div></div>
-        </article>
-        <article class="character-card">
-          <img src="maite.jpeg" alt="Maitê">
-          <div class="character-content"><h3>Maitê</h3><p>Uma jovem de 21 anos de postura impecável.</p><button class="character-more" aria-expanded="false">Conhecer personagem +</button><div class="character-extra">Sua paixão é o combate, do foco no tiro ao alvo à intensidade da luta.</div></div>
-        </article>
-      </div>
-    </section>
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+            <li data-torget="#myCarousel" data-slide-to="3"></li>
+        </ol>
 
-    <section class="section" id="storyboards">
-      <div class="section-heading"><h2>Storyboards</h2><p>Veja a introdução, o desenvolvimento e a conclusão visual da história.</p></div>
-      <div class="tabs" role="tablist">
-        <button class="tab-button active" role="tab" aria-selected="true" data-tab="story1">Introdução — Storyboard 1</button>
-        <button class="tab-button" role="tab" aria-selected="false" data-tab="story2">Desenvolvimento — Storyboard 2</button>
-        <button class="tab-button" role="tab" aria-selected="false" data-tab="story3">Conclusão — Storyboard 3</button>
-      </div>
-      <div class="tab-panel active" id="story1" role="tabpanel"><h3>Introdução: Storyboard 1</h3><img src="storybord1.jpeg" alt="Storyboard da introdução"><p>“O início de um novo caminho se estende à sua frente. Terá coragem de encará-lo?”</p></div>
-      <div class="tab-panel" id="story2" role="tabpanel"><h3>Desenvolvimento: Storyboard 2</h3><img src="storybord2.jpeg" alt="Storyboard do desenvolvimento"><p>“Após conhecer a trama envolvente e o protagonista dedicado, prosseguimos para o desenrolar de um mundo ameaçado.”</p></div>
-      <div class="tab-panel" id="story3" role="tabpanel"><h3>Conclusão: Storyboard 3</h3><img src="storybord3.jpeg" alt="Storyboard da conclusão"><p>“O drama e a tensão lhe trouxeram até aqui, e você foi bravo ao nos acompanhar por essa jornada. Obrigado!”</p></div>
-    </section>
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <img src="capa do jogo.jpeg" alt="Capa do Jogo" width="200" height="300">
+                <div class="carousel-caption">
+                    <h3>JOGUE JÁ!</h3>
+                    <p>Venha conosco se aventurar no universo de Ossos do Ofício!</p>
+                </div>
+            </div>
 
-    <section class="section" id="tutoriais">
-      <div class="section-heading"><h2>Tutoriais</h2><p>Aprenda as mecânicas essenciais para se tornar um Boticário Viajante.</p></div>
-      <div class="video-grid">
-        <article class="video-card"><h3>Gameplay: como funciona a jogabilidade?</h3><video controls preload="metadata"><source src="tutorial.jogabilidade.mp4" type="video/mp4">Seu navegador não suporta vídeo HTML5.</video><p>A precisão é crucial. Um erro nas proporções pode mudar o resultado!</p></article>
-        <article class="video-card"><h3>Tutorial das fases</h3><video controls preload="metadata"><source src="jogo (1) (1).mp4" type="video/mp4">Seu navegador não suporta vídeo HTML5.</video><p>Entenda como funcionam os desafios ao longo do jogo.</p></article>
-        <article class="video-card"><h3>Tutorial de instalação</h3><video controls preload="metadata"><source src="WhatsApp Video 2025-11-11 at 21.57.06.mp4" type="video/mp4">Seu navegador não suporta vídeo HTML5.</video><p>Veja o passo a passo para instalar o jogo.</p></article>
-      </div>
-      <div class="download-card">
-        <h3>Baixe ou jogue Ossos do Ofício</h3>
-        <p>Os links de download abaixo precisam apontar para os arquivos correspondentes na pasta do site.</p>
-        <div class="download-links">
-          <a class="button" href="seu_jogo.apk" download="Jogo_Botanica_Instalar.apk">Baixar jogo (APK)</a>
-          <a class="button" href="jogo_botanica_v1.0.rar" download="Jogo_Botanica_Instalar.rar">Baixar versão RAR</a>
-          <a class="button" href="https://beatrizminoura-cmyk.github.io/ossos-do-oficio/" target="_blank" rel="noopener noreferrer">Jogar versão web</a>
+            <div class="item">
+                <img src="personagfens.jpeg" alt="Personagens" width="200" height="300">
+                <div class="carousel-caption">
+                    <h3>Conheça os personagens</h3>
+                    <p>Desvende os segredos da vida apocalíptica. É hora de aprender jogando</p>
+                </div>
+            </div>
+
+            <div class="item">
+                <img src="cenario.carros.jpeg" alt="Cenário de Carros" width="200" height="300">
+                <div class="carousel-caption">
+                    <h3>Vença os desafios e salve-os!</h3>
+                    <p>Vença desafios matemáticos, conheça elementos e salve os zumbis desse terror biolégico!</p>
+                </div>
+            </div>
+            
+            <div class="item">
+                <img src="cenario.ponte.jpeg" alt="Cenário de Ponte" width="200" height="300">
+                <div class="carousel-caption">
+                    <h3>Você é a nossa única esperança...</h3>
+                    <p>Ajude Abel em suas poções complexas e mirabolantes!</p>
+                </div>
+            </div>
+
+            <div class="item">
+                <img src="cenario.apocalipse.jpeg" alt="Cenário Apocalipse" width="200" height="300">
+                <div class="carousel-caption">
+                    <h3>Eai, topa embarcar nessa aventura?</h3>
+                    <p>Baixe e instale Ossos do Ofício</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </section>
 
-    <section class="section" id="recursos">
-      <div class="section-heading"><h2>Códigos e recursos</h2><p>Estrutura organizada dos principais eventos, ingredientes e informações técnicas do projeto.</p></div>
+        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
 
-      <div class="accordion-item">
-        <button class
+    <div id="band" class="container text-center">
+        <h3>PREFÁCIO</h3>
+        <p>Honrar aos ossos do ofício de um falecido pai. Quem diria que, no fim, isto representaria a salvação e triunfo da raça humana?</p>
+        <p>Quando a Terra foi atingida por dois apocalipses simultâneos, o pesar de um possível futuro próspero recaiu sobre as costas esquálidas do Protagonista. Com a incidência dessas novas ameaças, o jovem sai da grande cidade de São Paulo em direção ao coração da Amazônia, onde a fazenda de seu pai jaz intocada, desde de sua morte. A fazenda logo se mostra equipada com um antigo e mofado laboratório, além da empoeirada biblioteca com livros didáticos e anotações.</p>
+        <p>Os dois apocalipses funcionam em conjunto para aniquilação humana total: ambos os vírus surgiram em detrimento do derretimento das geleiras, em função do aquecimento global. Isso fez com que geleiras milenares derretessem, e que sua água se misturasse aos mares. O que ninguém sabia era o fato de que tais geleiras continham vírus mais que centenários, e que logo estes se mostrariam a nova ameaça emergente mundial.</p>
+        <p>Acompanhe nosso protagonista na jornada em busca da cura para esta pandemia mundial, através da matemática, química e alquimia, desvende segredos, recolha conhecimentos e encontre importantes aliados pelo caminho.</p>
+        <p>Você acha que é capaz de salvar o mundo?</p>
+        
+        <br>
+        <p>PERSONAGENS:</p>
+        <div class="row">
+             <div class="col-sm-4">
+                <p class="text-center"><strong>Lílian (Líli)</strong></p><br>
+                <a href="#demo" data-toggle="collapse">
+                    <img src="lili.jpeg" class="img-circle person" alt="Abel" width="400" height="400" >
+                </a>
+                <div id="demo" class="collapse">
+                    <p>Com 8 anos, ela é pura energia em miniatura. Seu passatempo favorito é praticar esportes, especialmente pular corda e correr.</p>
+                </div>
+            </div>
+            
+            <div class="col-sm-4">
+                <p class="text-center"><strong>Abel</strong></p><br>
+                <a href="#demo2" data-toggle="collapse">
+                    <img src="abel.jpeg" class="img-circle person" alt="Abel" width="400" height="400">
+                </a>
+                <div id="demo2" class="collapse">
+                    <p>Um cientista de 19 anos que busca a verdade nas raízes da botânica e nos mistérios dos livros antigos de alquimia.</p>
+                </div>
+            </div>
+            
+            <div class="col-sm-4">
+                <p class="text-center"><strong>Maitê</strong></p><br>
+                <a href="#demo3" data-toggle="collapse">
+                    <img src="maite.jpeg" class="img-circle person" alt="Maitê" width="400" height="400">
+                </a>
+                <div id="demo3" class="collapse">
+                    <p>Postura impecável e 21 anos de idade. Sua paixão é o combate, do foco do tiro ao alvo à intensidade da luta.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tour" class="bg-1">
+        <div class="container">
+            <h3 class="text-center">FASES</h3>
+            <p class="text-center">Cenas principais do jogo<br> Mostrando por trás das cortinas!</p>
+            
+            <div class="row text-center">
+                <div class="col-sm-4">
+                    <div class="thumbnail">
+                        <img src="WhatsApp Image 2025-11-06 at 19.28.31 (1).jpeg" alt="Fase do encontro com a criança" width="400" height="300">
+                        <p style="text-align: center;"><strong>Primeira fase</strong></p>
+                        <p style="text-align: center;">Encontro com a criança</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="thumbnail">
+                        <img src="WhatsApp Image 2025-11-06 at 19.28.32.jpeg" alt="Fase da conta" width="400" height="300">
+                        <p style="text-align: center;"><strong>Primeira fase</strong></p>
+                        <p style="text-align: center;">Resolva uma conta matemática</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="thumbnail">
+                        <img src="WhatsApp Image 2025-11-06 at 19.28.32 (1).jpeg" alt="Fase da cura" width="400" height="300">
+                        <p style="text-align: center;"><strong>Primeira fase</strong></p>
+                        <p style="text-align: center;">Cura da criança</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row text-center">
+                <div class="col-sm-4">
+                    <div class="thumbnail">
+                        <img src="fase2.conta matematica.jpeg" alt="Fase da conta" width="400" height="300">
+                        <p style="text-align: center;"><strong>Segunda fase</strong></p>
+                        <p style="text-align: center;">Resolva uma conta matemática</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="thumbnail">
+                        <img src="fase2.fazendo antidoto.jpeg" alt="Fase de fazer o antidoto" width="400" height="300">
+                        <p style="text-align: center;"><strong>Segunda fase</strong></p>
+                        <p style="text-align: center;">Fazendo antídoto</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="thumbnail">
+                        <img src="fase2.distribuindo.jpeg" alt="Fase de distribuir" width="400" height="300">
+                        <p style="text-align: center;"><strong>Segunda fase</strong></p>
+                        <p style="text-align: center;">Distribuindo o antídoto</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row text-center">
+                <div class="col-sm-4">
+                    <div class="thumbnail">
+                        <img src="fase3.balaça.jpeg" alt="Fase da balançã" width="400" height="300">
+                        <p style="text-align: center;"><strong>Terceira fase</strong></p>
+                        <p style="text-align: center;">Desafio balança</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="thumbnail">
+                        <img src="fase3.proveta.jpeg" alt="Fase da proveta" width="400" height="300">
+                        <p style="text-align: center;"><strong>Terceira fase</strong></p>
+                        <p style="text-align: center;">Desafio proveta</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="thumbnail">
+                        <img src="fase3.antidoto pronto.jpeg" alt="Fase do antidoto" width="400" height="300">
+                        <p style="text-align: center;"><strong>Terceira fase</strong></p>
+                        <p style="text-align: center;">Criação do antídoto</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
+    <div id="contact" class="container">
+        <h3 class="text-center">Contato:</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <p><span class="glyphicon glyphicon-map-marker"></span>Brasil, São Paulo</p>
+                <p><span class="glyphicon glyphicon-phone"></span>Telefone: +55 11 97086-4213</p>
+                <p><span class="glyphicon glyphicon-envelope"></span>Email:ossosdooficioraizes@gmail.com</p>
+            </div>
+            </div>
+
+        <br>
+        
+        <div id="storyboard_section" class="container">
+            <h3 class="text-center">STORYBOARDS</h3>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#home">Introdução - Storyboard 1</a></li>
+                <li><a data-toggle="tab" href="#menu1">Desenvolvimento - Storyboard 2</a></li>
+                <li><a data-toggle="tab" href="#menu2">Conclusão - Storyboard 3</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                    <h2>Introdução: Storyboard 1</h2>
+                    <img src="storybord1.jpeg">
+                    <p>"O início de um novo caminho se estende à sua frente. Terá coragem de encará-lo?"</p>
+                </div>
+                <div id="menu1" class="tab-pane fade">
+                    <h2>Desenvolvimento: Storyboard 2</h2>
+                    <img src="storybord2.jpeg">
+                    <p>"Após ter conhecido a trama envolvente e o protagonista dedicado, prosseguimos para o desenrolar do mundo apolítico em ameaça"</p>
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                    <h2>Conclusão: Storyboard 3</h2>
+                    <img src="storybord3.jpeg">
+                    <p>"O drama e a tensão lhe trouxeram até aqui, e você foi bravo ao nos acompanhar por essa jornada. Obrigado!"</p>
+                </div>
+            </div>
+        </div>
+        <br>
+        
+        <div id="tutorial_gameplay" class="container text-center">
+            <h3 class="text-center" style="margin-top: 50px;">TUTORIAIS</h3>
+            <p class="text-center text-muted"><em>Aprenda as mecânicas essenciais do jogo para se tornar um Boticário Viajante!</em></p>
+            <br>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="text-center">🎬 Tutorial de Gameplay: Como é a jogabilidade?</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <video class="embed-responsive-item" controls>
+                            <source src="tutorial.jogabilidade.mp4" type="video/mp4">
+                            Seu navegador não suporta o vídeo tutorial.
+                        </video>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <p>A precisão é crucial. Um erro nas proporções pode ser fatal!</p>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="text-center">🎬 Tutorial das Fases: De que forma funcionam as fases do jogo?</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <video class="embed-responsive-item" controls>
+                            <source src="jogo (1) (1).mp4" type="video/mp4">
+                            Seu navegador não suporta o vídeo tutorial.
+                        </video>
+                    </div>
+                </div>
+                </div>
+
+            <div id="tutorial_instalação" class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="text-center">🎬 Tutorial de Instalação: Como posso instalar?</h4>
+                </div>
+                <div class="panel-body">
+                    <p class="text-center text-muted"><em>Aprenda como instalar nosso jogo!</em></p>
+                    <br>
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <video class="embed-responsive-item" controls>
+                            <source src="WhatsApp Video 2025-11-11 at 21.57.06.mp4" type="video/mp4">
+                            Seu navegador não suporta o vídeo tutorial.
+                        </video>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <p>Clique no botão abaixo para baixar o arquivo de instalação (APK) do nosso Jogo de Botânica para Android:</p>
+                    <a href="seu_jogo.apk" download="Jogo_Botanica_Instalar.apk" class="btn btn-success btn-lg">
+                        Baixar Jogo (Arquivo APK)
+                    </a>
+                    <p>Baixe a versão completa do nosso jogo e todos os arquivos em formato RAR:</p>
+                    <a href="jogo_botanica_v1.0.rar" download="Jogo_Botanica_Instalar.rar" class="btn btn-primary btn-lg">
+                        Clique para Baixar (Arquivo .RAR)
+                    </a>
+                    <p>Você também pode jogar web! É só acessa o link abaixo:</p>
+                    <a href=" https://beatrizminoura-cmyk.github.io/ossos-do-oficio/" target="_blank"> Clique aqui para jogar</a>
+                </div>
+            </div>
+        </div>
+        <br>
+        
+        <div id="game_codes" class="container" style="padding-top: 50px;">
+            <h3 class="text-center" style="color: #804011; letter-spacing: 5px;">CÓDIGOS E RECURSOS</h3>
+            <p class="text-center text-muted"><em>Estrutura organizada dos principais scripts e assets do projeto.</em></p>
+            
+            <div class="panel-group" id="accordion">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="background-color: #a8683a;">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" style="color: white;">
+                                🧪 Scripts Principais feitos no RPG (Cálculos e Proporções)
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse1" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <p>Estes códigos gerenciam a lógica de medição do antídoto.</p>
+                            <pre style="background-color: #f8f8f8; border-color: #ddd;">
+                                
+/*
+ * Evento da Balança: Desafio de soma/subtração para atingir o peso alvo (18g).
+ */
+*Evento da balança*
+​<>Controlar Variáveis: #0020 Peso_atual = 0
+​<>Exibir Imagem: #1, balança, Superior Esq., (0,0), (80%, 70%), 250, Normal
+​<>Controlar Variáveis: #0019 Peso_alvo = 18
+​<>Texto: Nenhum, Janela, Inferior
+​: : Desafio da balança:
+​<>Texto: Nenhum, Janela, Inferior
+​: : De um lado da balança está um copo que pesa 18g.
+​: : Coloque os pesos certos e equilibre a balança.
+​<>Ciclo
+​<>Controlar Variáveis: #0018 Peso_display = Peso_atual
+​<>Texto: Nenhum, Janela, Inferior
+​: : O peso atual é: \V[18]g. O que deseja adicionar?
+​<>Exibir Escolhas: Ferro (+10g), Cobre (+5g), Vidro (+2g), Chamar Ajudante (+1g), Tentar
+​:Quando Ferro (+10g)
+​<>Controlar Variáveis: #0020 Peso_atual += 10
+​:
+​:Quando Cobre (+5g)
+​<>Controlar Variáveis: #0020 Peso_atual += 5
+​:
+​:Quando Vidro (+2g)
+​<>Controlar Variáveis: #0020 Peso_atual += 2
+​:
+​:Quando Chamar Ajudante (+1g)
+​<>Controlar Variáveis: #0020 Peso_atual += 1
+​:
+​:Quando Chamar Ajudante (+1g)
+​<>Controlar Variáveis: #0020 Peso_atual += 1
+​:
+​:Quando Tentar abrir (-5g) /* Ação de 'Tentar' com peso negativo, talvez um erro no código original? */
+​<>Controlar Variáveis: #0020 Peso_atual -= 5
+​<>Se: Peso_atual = Peso_alvo
+​<>Reproduzir SE: Item3 (90, 100, 0)
+​<>Texto: Nenhum, Janela, Inferior
+​: : Parabéns! Você conseguiu balancear os pesos!
+​<>Texto: Nenhum, Janela, Inferior
+​: : Você ganhou 10 gramas de Pó de Caule Amargo.
+​<>Mudar Itens: Pó de Caule Amargo + 1
+​<>Apagar Imagem: #1
+​<>Controlar Switches: #0016 Balança = ON
+​<>Controlar Switches Locais: B = ON
+​<>Quebrar Loop
+​:
+​<>Se Não
+​<>Texto: Nenhum, Janela, Inferior
+​: : Não está equilibrado. Peso atual: \V[20]g.
+​<>Esperar: 30 quadros
+​:
+​<>Fim
+​:
+​<>Fim
+
+/*
+ * Eventos do Temporizador (Timer): Início, Execução e Game Over por tempo.
+ */
+*Eventos do Temporizador (Timer)* - EV001 e Evento Comum: game over
+Estes eventos lidam com o início e o fim do temporizador para a fase do antídoto e o Game Over.
+EV001 - Página 1: Iniciar Fase (Ativação: Execução Automática)
+Conteúdo:
+ * Texto: Nenhum, Janela, Inferior
+   > \V[3] Fase \V[2]
+   > Ao completar essa fase, você poderá ganhar uma ajudante, que te ajudará nas poções.
+   >
+ * Texto: Nenhum, Janela, Inferior
+   > Você conseguiu um enigma no seu Laboratório!
+   > Agora resolva os enigmas para subir de fase.
+   >
+ * Controlar Cronômetro: Iniciar, 2 min 0 seg.
+ * Reproduzir BGM: Dungeon2 (60, 0, 0)
+ * Texto: People4(4), Janela, Inferior
+   > O Desafio de maceração começou!
+   > Tempo Limite: 2 Minutos
+   >
+ * Controlar Switches Locais: A = ON
+EV001 - Página 2: Temporizador em Execução (Condição: Switch Local A = ON)
+Conteúdo:
+ * Vazio (Aguardando o cronômetro expirar ou Switch 0018 ser ligado)
+EV001 - Página 3: Fim da Fase (Condição: Switch 0018 fase 2 antídoto = ON)
+Conteúdo:
+ * Vazio (Impede Game Over por tempo. Próxima ação em outro evento.)
+Evento Comum: game over (Início: Paralelo | Condição: Switch 0017 fase2 concluída = ON)
+Conteúdo:
+ * Se:Cronômetro 0 min 0 seg
+   > Controlar Cronômetro: Parar
+   > Texto: Nenhum, Janela, Inferior
+   > > O tempo limite da maceração expirou.
+   > > Falha de Missão.
+   > > Fim de Jogo
+   > > Controlar Switches: #0017 fase2 concluída = ON
+   > >
+   >
+ * :Fim
+
+/*
+ * Eventos do Cadeado (Locker): Desafio de senha matemática.
+ */
+*Eventos do Cadeado (Locker)* - EV003
+Estes eventos controlam a abertura de um armário trancado por um código.
+EV003 - Página 1: Cadeado Trancado (Ativação: Pressionar Tecla)
+Conteúdo:
+ * Texto: People4(4), Janela, Inferior
+   > O armário está trancado. Digite a senha de 3 dígitos
+   >
+ * Texto: Nenhum, Janela, Inferior
+   > Dica: Quantos minutos existem em 12 horas e meia? (12,5 horas)? /* Resposta: 12.5 * 60 = 750 */
+   >
+ * Inserir Número: Número A = 750 (Variável A)
+ * Se: \V[A] = 750
+   > Texto: People4(4), Janela, Inferior
+   > > CÓDIGO Dragoflor coletada.
+   > > Controlar Switches: #0023 Dragoflor_ok = ON
+   > > Controlar Switches Locais: A = ON
+   > > Reproduzir SE: Absorb2 (90, 100, 0)
+   > > Mostrar Animação: Este Evento, Flash (Esperar)
+   > > Esperar: 60 quadros
+   > > Se Não
+   > > >> Script: $$$gameTimer.\_frames = $$gameTimer.\_frames - 15 * 60 /* Penalidade de 15 segundos */
+   > > >> Texto: Nenhum, Janela, Inferior
+   > > >>> Senha incorreta. -15s
+   > > :Fim
+   > >
+ * :Fim
+EV003 - Página 2: Armário Vazio (Condição: Switch Local A = ON)
+Conteúdo:
+ * Texto: People4(4), Janela, Inferior
+   > Armário vazio, Dragoflor coletado
+   >
+
+/*
+ * Evento da Proveta (Graduated Cylinder): Desafio de medição de volume.
+ */
+*Evento da Proveta (Graduated Cylinder)* - EV007
+Este evento controla a medição de líquido em uma proveta para coletar a Essência Solar.
+EV007 - Página 1: Início da Medição (Condição: Switch = [Vazio])
+Conteúdo:
+ * Controlar Switches: #0050 medir líquido = ON
+ * Apagar Imagem: #1
+ * Quebrar Loop
+ * :Se: \V[volume\_líquido] > \V[volume\_correto]
+   > Texto: Nenhum, Janela, Inferior
+   > > Passou do ponto! Está acima da marca.
+   > >
+ * :Se Não
+   > Texto: Nenhum, Janela, Inferior
+   > > Ainda falta líquido para atingir \V[35] ml.
+   > >
+ * :Fim
+ * :Quando Sair
+   > Apagar Imagem: #1
+   > Quebrar Loop
+   >
+ * :Fim
+ * :Repetir Acima
+EV007 - Página 2: Medição Correta (Condição: Switch #0050 medir líquido = ON)
+Conteúdo:
+ * :Se: \V[volume\_líquido] = \V[volume\_correto]
+   > Texto: Nenhum, Janela, Inferior
+   > > Perfeito! Você atingiu \V[35] ml e coletou a Essência Solar!
+   > > Mudar Itens: Essência Solar + 1
+   > > Controlar Switches: #0050 medir líquido = ON
+   > > Apagar Imagem: #1
+   > > Quebrar Loop
+   > >
+ * :Se Não
+   > :Se: \V[volume\_líquido] > \V[volume\_correto]
+   > >> Texto: Nenhum, Janela, Inferior
+   > >>> Passou do ponto! Está acima da marca.
+   > :Se Não
+   > >> Texto: Nenhum, Janela, Inferior
+   > >>> Ainda falta líquido para atingir \V[35] ml.
+   > :Fim
+   >
+ * :Fim
+ * :Quando Sair
+   > Apagar Imagem: #1
+   > Quebrar Loop
+   >
+ * :Fim
+ * :Repetir Acima
+
+/*
+ * Evento de Fazer Antídoto (Make Antidote): Checagem de ingredientes via JavaScript.
+ */
+*Evento de Fazer Antídoto (Make Antidote)* - EV002
+Este evento controla a criação do antídoto através da checagem de ingredientes.
+EV002 (Ativação: Toque do Evento)
+Conteúdo:
+ * Reproduzir SE: Magic4 (90, 100, 0)
+ * Texto: Actor(1), Janela, Inferior
+   > Clique aqui para fazer os antídotos quando já tiver todos os ingredientes.
+   >
+ * Script:
+   /* Checa se tem Seiva de Raiz Branca (Item 6) e Pó de Flor da Lua (Item 7) */
+   \text{var a=} \$gameParty.\text{numItems}(\$dataItems[6]), \text{b=} \$gameParty.\text{numItems}(\$dataItems[7]);
+
+   /* Adiciona as contagens de itens na mensagem */
+   $$gameMessage.\text{add(}"Ingredientes: \backslash\backslash n\text{Voz de Raiz Branca: } \backslash\backslash \text{v}[6] \backslash\backslash n\text{Flor de la Lua: } \backslash\backslash \text{v}[7] \backslash\backslash \text{v}[6] + \backslash\backslash \text{v}[7] \backslash\backslash \text{nNectar Violeta: } \backslash\backslash \text{c}[4] \text{...}");
+
+   /* Condição para criar o Antídoto (Item 1) */
+   \text{if(a==1& & b==1) {
+       \$gameParty.\text{loseItem}(\$dataItems[6],1);
+       \$gameParty.\text{loseItem}(\$dataItems[7],1);
+       \$gameParty.\text{gainItem}(\$dataItems[1],1);
+       \$gameMessage.\text{add(}"Você criou um Antídoto!");
+       \$AudioManager.\text{playSe}(\{name:'Item3',volume:90,pitch:100,pan:0\});
+    \} else {
+        /* Lista ingredientes faltando */
+        \text{var f=[]};
+        \text{if(a<1) \{f.push("Seiva de Raiz Branca");\}};
+        \text{if(b<1) \{f.push("Pó de Flor da Lua");\}};
+        \text{/* 'c' não está definido no topo, erro de lógica ou item faltante */
+        \text{if(c<1) \{f.push("Néctar Violeta");\}};
+        \$AudioManager.\text{playSe}(\{name:'Buzzer',volume:90,pitch:100,pan:0\});
+        \$gameMessage.\text{add(}"Ingredientes faltando:\\\n" + f.\text{join(" \\\n")});
+    \}
+    \text{;}
+    >
+ * :Fim
+
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="background-color: #545748;">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" style="color: white;">
+                                🌿 Lista de Assets de Botânica (Ingredientes)
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse2" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul>
+                                <li>
+                                    <span class="glyphicon glyphicon-leaf"></span>
+                                    <div class="ingrediente-bloco">
+                                        <strong>Fase 1</strong><br>
+                                        * 15ml de Seiva de Raiz Branca<br>
+                                        * 5g de Pó de Flor da Lua<br>
+                                        * 10 gotas de Néctar Violeta
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="glyphicon glyphicon-tint"></span>
+                                    <div class="ingrediente-bloco">
+                                        <strong>Fase 2</strong><br>
+                                        * 25ml de Extrato de Gengibre Negro<br>
+                                        * 2 colheres rasas de Cinza Azul<br>
+                                        * 7 gotas de Sangue de Dragoflor<br>
+                                        * Maceração com cristal de sal por 10 segundos
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="glyphicon glyphicon-fire"></span>
+                                    <div class="ingrediente-bloco">
+                                        <strong> Fase 3</strong><br>
+                                        * 30ml de Essência Solar<br>
+                                        * 10g de Pó de Caule Amargo<br>
+                                        * 5ml de Lágrima de Salamandra<br>
+                                        * Mistura a 80°C por 30 segundos
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="background-color: #223828;">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3" style="color: white;">
+                                📜 Documentação Técnica (Game Design Document)
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse3" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p>Detalhes sobre a arquitetura do jogo e a progressão de nível:</p>
+                            <ol>
+                                <li>**Fase 1 (Iniciação):** Foco em coletar os ingredientes e curar a criançã. (Matemática: Soma e Subtração).</li>
+                                <li>**Fase 2 (Desenvolvimento):** Introdução à balança de precisão. (Matemática: Pesos e Unidades).</li>
+                                <li>**Fase 3 (Final):** Criação do Antídoto-Simbiótico. (Matemática: Divisão e Proporções Críticas).</li>
+                            </ol>
+                            <a href="https://beatrizminoura-cmyk.github.io/ossos-do-oficio/" target="_blank">Link para a Versão Web</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <hr>
+
+    <footer class="text-center footer-elegant">
+        <a class="up-arrow" href="#myPage" data-toggle="tooltip" title="TO TOP" aria-label="Voltar ao topo">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </a>
+        <br><br>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 footer-title-area">
+                    <h4>Desenvolvido por:</h4>
+                    <p class="project-tagline">Equipe de Desenvolvimento: Grupo 5</p>
+                </div>
+
+                <div class="col-md-8 footer-contact-list" style="text-align: left;">
+                    <p>
+                        Anita Maria de Sousa Ginetti:<br>
+                        E-mail: anita.maria@aluno.ifsp.edu.br | Tel: (11) 91513-5611
+                    </p>
+                    <p>
+                        Beatriz Sati Minoura:<br>
+                        E-mail: beatriz.minoura@gmail.com | Tel: (11) 93499-2950
+                    </p>
+                    <p>
+                        Clarice Cortez Generoso:<br>
+                        E-mail: Melgeneroso33@gmail.com | Tel: (11) 98726-4540
+                    </p>
+                    <p>
+                        Gabriela de Paula Silvestre Correa:<br>
+                        E-mail: gabriela.dpaula.scorrea@gmail.com | Tel: (11) 97086-4213
+                    </p>
+                    <p>
+                        Iago Braga Nascimento:<br>
+                        E-mail: Iagobraaga@gmail.com | Tel: (11) 95974-5339
+                    </p>
+                    <p>
+                        Pedro Murilo Gonzaga:<br>
+                        E-mail: murilo.pedro@aluno.ifsp.edu.br | Tel: (11) 99289-7398
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <hr class="footer-separator">
+            <p class="copyright-text">&copy; 2025. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function(){
+            // Inicializa a Dica Flutuante (Tooltip)
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Adiciona rolagem suave a todos os links da navbar + link do footer
+            // O código de smooth scrolling estava incompleto no original, mantendo a estrutura:
+            $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+                // Certifique-se de que this.hash tenha um valor antes de substituir o comportamento padrão
+                if (this.hash !== "") {
+                    // Impede o comportamento de clique padrão
+                    event.preventDefault();
+
+                    // Armazena o hash
+                    var hash = this.hash;
+
+                    // Usando o método animate() do jQuery para adicionar rolagem suave à página
+                    // O número 900 é a duração da animação (em milissegundos)
+                    $('html, body').animate({
+                        scrollTop: $(hash).offset().top
+                    }, 900, function(){
+
+                        // Adiciona o hash (#) à URL quando a rolagem estiver completa (comportamento de clique)
+                        window.location.hash = hash;
+                    });
+                } // Fim do if
+            });
+            
+            // Script para fechar o menu colapsado após o clique em um link (opcional, mas comum)
+             $('.navbar-nav a').on('click', function(){
+                if ($('.navbar-collapse').hasClass('in')) {
+                    $('.navbar-collapse').collapse('hide');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
