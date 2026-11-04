@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101b13">
+  <title>Dev's Labyrinth | Uma guerra muda tudo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #1a1a1a;
+      --bg-soft: #111111;
+      --panel: #292929;
+      --panel-light: #3b3b3b;
+      --green: #8a8a8a;
+      --green-light: #4a1717;
+      --copper: #7d2525;
+      --copper-light: #ec1a1a;
+      --cream: #b93737;
+      --muted: #eeeeee;
+      --line: rgba(#c8c8c8);
+      --shadow: 0 18px 45px rgba(223, 25, 25, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 82px; }
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font: 16px/1.7 "Lato", sans-serif;
+    }
+    img, video { max-width: 100%; display: block; }
+    a { color: var(--copper-light); }
+    button { font: inherit; }
+
+    /* Menu */
+    .navbar {
+      position: sticky; top: 0; z-index: 1000;
+      background: rgba(12, 21, 14, .96);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 5px 24px rgba(0,0,0,.28);
+      backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      width: min(1400px, 94%); min-height: 68px; margin: auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 22px;
+    }
+    .brand {
+      color: var(--copper-light); text-decoration: none;
+      font: 800 13px/1.3 "Montserrat", sans-serif; letter-spacing: 1.4px;
+      text-transform: uppercase; max-width: 270px;
+    }
+    .nav-links { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; list-style: none; }
+    .nav-links a {
+      display: block; padding: 23px 12px; color: var(--cream);
+      text-decoration: none; font: 700 11px "Montserrat", sans-serif;
+      letter-spacing: 1px; text-transform: uppercase; transition: .25s;
+    }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--copper-light); background: rgba(193,138,88,.1); }
+    .menu-toggle {
+      display: none; border: 1px solid var(--line); color: var(--cream);
+      background: var(--panel); padding: 8px 12px; cursor: pointer;
+    }
+
+    /* Carrossel */
+    .carousel {
+      height: min(72vh, 690px); min-height: 390px; position: relative;
+      overflow: hidden; background: #050805; border-bottom: 3px solid var(--copper);
+    }
+    .slides { height: 100%; display: flex; transition: transform .65s ease; }
+    .slide { min-width: 100%; height: 100%; position: relative; }
+    .slide img { width: 100%; height: 100%; object-fit: cover; opacity: .78; }
+    .slide::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(8,16,10,.82), rgba(8,16,10,.08) 85%),
+                  linear-gradient(0deg, rgba(8,16,10,.7), transparent 55%);
+    }
+    .slide-caption { position: absolute; z-index: 2; left: max(7%, calc((100% - 1200px)/2)); bottom: 90px; max-width: 650px; }
+    .eyebrow { color: var(--copper-light); font: 700 11px "Montserrat", sans-serif; letter-spacing: 4px; text-transform: uppercase; }
+    .slide-caption h1 { margin: 12px 0; font: 800 clamp(30px, 5vw, 62px)/1.08 "Montserrat", sans-serif; text-transform: uppercase; }
+    .slide-caption p { color: #e0dfd5; font-size: clamp(15px, 1.8vw, 19px); max-width: 560px; }
+    .carousel-arrow {
+      position: absolute; z-index: 5; top: 50%; transform: translateY(-50%);
+      width: 48px; height: 58px; border: 1px solid rgba(255,255,255,.35);
+      background: rgba(10,18,12,.65); color: white; font-size: 28px; cursor: pointer;
+      transition: .2s;
+    }
+    .carousel-arrow:hover { background: var(--green); border-color: var(--copper); }
+    .prev { left: 18px; } .next { right: 18px; }
+    .dots { position: absolute; z-index: 6; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+    .dot { width: 11px; height: 11px; border: 0; border-radius: 50%; background: #888; cursor: pointer; }
+    .dot.active { background: var(--copper-light); outline: 2px solid rgba(224,177,126,.35); outline-offset: 3px; }
+
+    /* Abertura e seções */
+    .hero {
+      min-height: 430px; display: grid; place-items: center; text-align: center; padding: 90px 6%;
+      background: radial-gradient(ellipse at center, rgba(49,75,50,.55), transparent 65%), var(--bg-soft);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-content { max-width: 900px; }
+    .hero h2 { font: 900 clamp(36px, 7vw, 76px)/1.1 "Montserrat", sans-serif; letter-spacing: 3px; text-transform: uppercase; }
+    .hero p { max-width: 720px; margin: 22px auto 30px; color: var(--muted); font-size: 19px; }
+    .button {
+      display: inline-block; padding: 13px 25px; border: 1px solid var(--copper);
+      background: var(--green); color: var(--cream); text-decoration: none;
+      font: 700 12px "Montserrat", sans-serif; letter-spacing: 1.5px; text-transform: uppercase;
+      transition: .25s;
+    }
+    .button:hover { background: var(--copper); color: #17130e; transform: translateY(-3px); }
+    .section { width: min(1200px, 90%); margin: auto; padding: 88px 0; }
+    .section-heading { text-align: center; margin-bottom: 46px; }
+    .section-heading h2 { font: 800 clamp(27px, 4vw, 40px) "Montserrat", sans-serif; text-transform: uppercase; letter-spacing: 2px; }
+    .section-heading::after { content: ""; display: block; width: 72px; height: 3px; background: var(--copper); margin: 17px auto; }
+    .section-heading p { color: var(--muted); }
+    .section-lead { color: var(--muted); max-width: 900px; margin: -18px auto 38px; text-align: center; }
+
+    /* História */
+    .story-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 35px; align-items: center; }
+    .story-copy {
+      padding: clamp(24px, 4vw, 42px); background: linear-gradient(145deg, var(--panel-light), var(--panel));
+      border-left: 4px solid var(--copper); box-shadow: var(--shadow);
+    }
+    .story-copy h3 { color: var(--copper-light); font: 700 25px "Montserrat", sans-serif; margin-bottom: 17px; }
+    .story-copy p { color: #d5d2c6; margin-bottom: 14px; }
+    .story-image img { width: 100%; height: 430px; object-fit: cover; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .question { text-align: center; color: var(--copper-light); font: 700 19px "Montserrat", sans-serif; margin-top: 30px; }
+
+    /* Personagens */
+    .character-grid, .phase-grid, .sprite-grid, .info-grid { display: grid; gap: 22px; }
+    .character-grid { grid-template-columns: repeat(3, 1fr); }
+    .character-card {
+      overflow: hidden; background: var(--panel); border: 1px solid var(--line);
+      box-shadow: var(--shadow); transition: transform .25s, border-color .25s;
+    }
+    .character-card:hover { transform: translateY(-6px); border-color: var(--copper); }
+    .character-card img { width: 100%; height: 310px; object-fit: cover; }
+    .character-content { padding: 23px; }
+    .character-content h3 { color: var(--copper-light); font: 700 23px "Montserrat", sans-serif; }
+    .character-content p { color: var(--muted); margin-top: 9px; }
+    .character-more {
+      margin-top: 15px; padding: 9px 13px; color: var(--cream); background: transparent;
+      border: 1px solid var(--line); cursor: pointer;
+    }
+    .character-more:hover { border-color: var(--copper); color: var(--copper-light); }
+    .character-extra { display: none; padding-top: 12px; color: #d5d2c6; }
+    .character-extra.open { display: block; }
+
+    /* Fases e imagens */
+    .phases-wrap { background: linear-gradient(180deg, #1b2a1d, #111a13); border-block: 1px solid var(--line); }
+    .phase-grid { grid-template-columns: repeat(3, 1fr); }
+    .phase-card { background: #f1e8d8; color: #263026; overflow: hidden; box-shadow: var(--shadow); }
+    .phase-card img { width: 100%; height: 220px; object-fit: cover; }
+    .phase-card div { padding: 17px; }
+    .phase-card h3 { color: #684421; font: 800 15px "Montserrat", sans-serif; text-transform: uppercase; }
+    .phase-card p { margin-top: 5px; color: #4c5148; }
+
+    /* Storyboards */
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 25px; }
+    .tab-button { padding: 12px 17px; background: var(--panel); color: var(--cream); border: 1px solid var(--line); cursor: pointer; }
+    .tab-button.active, .tab-button:hover { background: var(--green); border-color: var(--copper); }
+    .tab-panel { display: none; padding: 25px; background: var(--panel); border: 1px solid var(--line); text-align: center; }
+    .tab-panel.active { display: block; }
+    .tab-panel h3 { color: var(--copper-light); font: 700 22px "Montserrat", sans-serif; margin-bottom: 15px; }
+    .tab-panel img { max-height: 620px; width: auto; margin: auto; object-fit: contain; }
+    .tab-panel p { margin-top: 18px; color: var(--muted); font-style: italic; }
+
+    /* Vídeos e instalação */
+    .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .video-card, .download-card, .code-panel { background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .video-card h3, .download-card h3 { padding: 18px 20px; color: var(--copper-light); font: 700 17px "Montserrat", sans-serif; }
+    .video-card video { width: 100%; aspect-ratio: 16 / 9; background: #050805; }
+    .video-card p { padding: 14px 20px; color: var(--muted); }
+    .download-card { margin-top: 25px; padding: 25px; }
+    .download-card p { color: var(--muted); margin: 8px 0 16px; }
+    .download-links { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    /* Código e recursos */
+    .accordion-item { margin-bottom: 12px; border: 1px solid var(--line); background: var(--panel); }
+    .accordion-trigger {
+      width: 100%; padding: 17px 20px; text-align: left; border: 0;
+      background: var(--green); color: var(--cream); cursor: pointer;
+      font: 700 14px "Montserrat", sans-serif;
+    }
+    .accordion-trigger:hover { background: #3d5a3e; }
+    .accordion-content { display: none; padding: 22px; color: #d5d2c6; }
+    .accordion-content.open { display: block; }
+    .accordion-content ul, .accordion-content ol { padding-left: 22px; }
+    .accordion-content li { margin: 8px 0; }
+    pre {
+      overflow-x: auto; white-space: pre-wrap; overflow-wrap: anywhere;
+      padding: 18px; background: #0c120d; color: #d7d9c9;
+      border: 1px solid #40513f; font: 13px/1.55 Consolas, monospace;
+    }
+    .ingredient-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .ingredient { padding: 20px; background: var(--bg-soft); border-top: 3px solid var(--copper); }
+    .ingredient h3 { color: var(--copper-light); margin-bottom: 8px; font: 700 17px "Montserrat", sans-serif; }
+
+    /* Contato e rodapé */
+    .contact-box { max-width: 780px; margin: auto; padding: 28px; background: var(--panel); border: 1px solid var(--line); text-align: center; }
+    .contact-box p { margin: 7px 0; color: var(--muted); }
+    footer { padding: 38px 5%; text-align: center; background: #0a100b; border-top: 2px solid var(--copper); color: var(--muted); }
+    footer strong { color: var(--copper-light); }
+    .back-top { display: inline-block; margin-bottom: 15px; text-decoration: none; }
+
+    @media (max-width: 900px) {
+      .nav-inner { align-items: flex-start; padding: 14px 0; }
+      .nav-links { justify-content: center; }
+      .nav-links a { padding: 12px 9px; }
+      .story-grid { grid-template-columns: 1fr; }
+      .character-grid, .phase-grid { grid-template-columns: repeat(2, 1fr); }
+      .ingredient-list { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .nav-inner { display: block; }
+      .nav-top { display: flex; align-items: center; justify-content: space-between; }
+      .menu-toggle { display: block; }
+      .nav-links { display: none; flex-direction: column; align-items: stretch; padding-top: 8px; }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 11px 5px; text-align: center; }
+      .carousel { height: 440px; min-height: 0; }
+      .slide-caption { left: 8%; right: 8%; bottom: 75px; }
+      .slide-caption h1 { font-size: 32px; }
+      .carousel-arrow { width: 38px; height: 46px; font-size: 22px; }
+      .prev { left: 8px; } .next { right: 8px; }
+      .hero { min-height: 350px; padding: 65px 6%; }
+      .hero p { font-size: 16px; }
+      .section { padding: 62px 0; }
+      .character-grid, .phase-grid, .video-grid { grid-template-columns: 1fr; }
+      .character-card img { height: 280px; }
+      .story-image img { height: 290px; }
+      .tab-button { flex: 1 1 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+
+<body id="top">
+  <nav class="navbar" aria-label="Navegação principal">
+    <div class="nav-inner">
+      <div class="nav-top">
+        <a class="brand" href="#top">Dev's Labyrinth<br>Uma guerra muda tudo</a>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navLinks">Menu ☰</button>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#prefacio">Prefácio</a></li>
+        <li><a href="#personagens">Sprites</a></li>
+        <li><a href="#storyboards">Storyboards</a></li>
+        <li><a href="#tutoriais">Tutoriais</a></li>
+        <li><a href="#recursos">Códigos e recursos</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="carousel" aria-label="Destaques do jogo">
+    <div class="slides" id="slides">
+      <div class="slide">
+        <img src="devs-labyrinth/images/Pátio Escolar Pixelado com Estudantes.png" alt="Cidade">
+        <div class="slide-caption"><span class="eyebrow">Uma aventura de conhecimento</span><h1>Jogue já!</h1><p>Venha conosco se aventurar no universo de Dev's Labyrinth.</p></div>
+      </div>
+      <div class="slide">
+        <img src="devs-labyrinth/images/cidade em guerra.jpg" alt="Cidade em guerra">
+        <div class="slide-caption"><span class="eyebrow"></span><h1></h1><p></p></div>
+      </div>
+      <div class="slide">
+        <img src="devs-labyrinth/images/humanoserobos.jpg" alt="Cenário com carros">
+        <div class="slide-caption"><span class="eyebrow"></span><h1></h1><p></p></div>
+      </div>
+      <div class="slide">
+        <img src="devs-labyrinth/images/Confronto no campo de batalha.png" alt="Cenário de uma ponte">
+        <div class="slide-caption"><span class="eyebrow"></span><h1></h1><p></p></div>
+      </div>
+      <div class="slide">
+        <img src="devs-labyrinth/images/carrosel3.png" alt="Cenário do apocalipse">
+        <div class="slide-caption"><span class="eyebrow"></span><h1></h1><p></p></div>
+      </div>
+    </div>
+    <button class="carousel-arrow prev" id="prevSlide" aria-label="Imagem anterior">‹</button>
+    <button class="carousel-arrow next" id="nextSlide" aria-label="Próxima imagem">›</button>
+    <div class="dots" id="dots" aria-label="Escolher imagem">
+      <button class="dot active" aria-label="Ir para imagem 1"></button>
+      <button class="dot" aria-label="Ir para imagem 2"></button>
+      <button class="dot" aria-label="Ir para imagem 3"></button>
+      <button class="dot" aria-label="Ir para imagem 4"></button>
+      <button class="dot" aria-label="Ir para imagem 5"></button>
+    </div>
+  </div>
+
+  <script>
+    const slides = document.getElementById("slides");
+    const prevButton = document.getElementById("prevSlide");
+    const nextButton = document.getElementById("nextSlide");
+    const dots = document.querySelectorAll("#dots .dot");
+
+    let slideAtual = 0;
+    const totalSlides = slides.children.length;
+
+    function mostrarSlide(indice) {
+      slideAtual = (indice + totalSlides) % totalSlides;
+      slides.style.transform = `translateX(-${slideAtual * 100}%)`;
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === slideAtual);
+      });
+    }
+
+    nextButton.addEventListener("click", () => mostrarSlide(slideAtual + 1));
+    prevButton.addEventListener("click", () => mostrarSlide(slideAtual - 1));
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", () => mostrarSlide(i));
+    });
+
+    setInterval(() => mostrarSlide(slideAtual + 1), 5000);
+  </script>
+
+  <header class="hero">
+    <div class="hero-content">
+      <span class="eyebrow">Dev's Labyrinth | Uma guerra muda tudo</span>
+      <h2>Uma busca pela liberdade</h2>
+      <p>Os corredos da escola viraram um labirinto, sera que você consegue sair de lá?.</p>
+      <a class="button" href="#prefacio">Conhecer a história</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="prefacio">
+      <div class="section-heading"><h2>Prefácio</h2><p>Agora, em meio ao caos, a sobrevivência se tornou o maior desafio.</p></div>
+      <div class="story-grid">
+        <div class="story-copy">
+          <h3>Uma guerra, uma esperança</h3>
+          <p>Em um mundo marcado pelo conflito entre humanos e máquinas, a humanidade enfrenta as consequências de uma guerra que mudou tudo. Cidades foram destruídas, tecnologias se voltaram contra seus criadores e a esperança de reconstruir a civilização parece cada vez mais distante.</p>
+          <p>Em meio ao caos, você se torna Justin: alguém que carrega consigo não apenas a própria sobrevivência, mas também a possibilidade de mudar o destino desse mundo.</p>
+<p>Sozinho em uma jornada cheia de desafios, você precisa explorar esse cenário devastado, enfrentar obstáculos e descobrir o que realmente aconteceu.</p>
+          <p class="question">Sua missão é simples, mas seu impacto pode ser enorme: sobreviver, descobrir a verdade e decidir o futuro da humanidade.</p>
+        </div>
+        <div class="story-image"><img src="devs-labyrinth/images/personagem.png" alt="Personagem principal"></div>
+      </div>
+    </section>
+
+    <section class="section" id="personagens">
+      <div class="section-heading"><h2>Sprites</h2><p>"Conheça nosso protagonista em sua representação visual dentro do jogo: a sprite do nosso player!"</p></div>
+      <div class="character-grid">
+        <article class="character-card">
+          <img src="devs-labyrinth/images/spritedireita.jpeg" alt="Lílian, também chamada de Líli">
+          <div class="character-content"><h3></h3><p></p><button class="character-more" aria-expanded="false"></button><div class="character-extra">Seu passatempo favorito é praticar esportes, especialmente pular corda e correr.</div></div>
+        </article>
+        <article class="character-card">
+          <img src="devs-labyrinth/images/spritecostas.jpeg" alt="Abel">
+          <div class="character-content"><h3></h3><p></p><button class="character-more" aria-expanded="false"></button><div class="character-extra">Busca a verdade nas raízes da botânica e nos mistérios dos livros antigos de alquimia.</div></div>
+        </article>
+        <article class="character-card">
+          <img src="devs-labyrinth/images/spriteesquerda.jpeg" alt="Maitê">
+          <div class="character-content"><h3></h3><p></p><button class="character-more" aria-expanded="false"></button><div class="character-extra">Sua paixão é o combate, do foco no tiro ao alvo à intensidade da luta.</div></div>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="storyboards">
+      <div class="section-heading"><h2>Storyboards</h2><p>Veja as primeiras versões do nosso jogo</p></div>
+      <div class="tabs" role="tablist">
+        <button class="tab-button active" role="tab" aria-selected="true" data-tab="story1">Storyboard 1</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-tab="story2">Storyboard 2</button>
+        <button class="tab-button" role="tab" aria-selected="false" data-tab="story3">Storyboard 3</button>
+      </div>
+      <div class="tab-panel active" id="story1" role="tabpanel"><h3>Personagem</h3><img src="devs-labyrinth/images/storyboard1.jpeg" alt="Storyboard 1"><p>“A primeira versão do nosso personagem”</p></div>
+      <div class="tab-panel" id="story2" role="tabpanel"><h3>Capa inicial</h3><img src="devs-labyrinth/images/storyboard2.jpeg" alt="Storyboard 2"><p>“O início de uma enorme guerra”</p></div>
+      <div class="tab-panel" id="story3" role="tabpanel"><h3>A cidade</h3><img src="devs-labyrinth/images/storyboard3.jpeg" alt="Storyboard 3"><p>“Uma vista panorâmica da cidade”</p></div>
+    </section>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const botoes = document.querySelectorAll(".tab-button");
+    const paineis = document.querySelectorAll(".tab-panel");
+
+    botoes.forEach(botao => {
+        botao.addEventListener("click", function () {
+            const destino = this.dataset.tab;
+
+            botoes.forEach(b => {
+                b.classList.remove("active");
+                b.setAttribute("aria-selected", "false");
+            });
+
+            paineis.forEach(painel => {
+                painel.classList.remove("active");
+            });
+
+            this.classList.add("active");
+            this.setAttribute("aria-selected", "true");
+
+            document.getElementById(destino).classList.add("active");
+        });
+    });
+});
+</script>
+
+    <section class="section" id="tutoriais">
+      <div class="section-heading"><h2>Tutoriais</h2><p>Aprenda as mecânicas essenciais para se tornar um Boticário Viajante.</p></div>
+      <div class="video-grid">
+        <article class="video-card"><h3>Gameplay: como funciona a jogabilidade?</h3><video controls preload="metadata"><source src="tutorial.jogabilidade.mp4" type="video/mp4">Seu navegador não suporta vídeo HTML5.</video><p>A precisão é crucial. Um erro nas proporções pode mudar o resultado!</p></article>
+        <article class="video-card"><h3>Tutorial das fases</h3><video controls preload="metadata"><source src="jogo (1) (1).mp4" type="video/mp4">Seu navegador não suporta vídeo HTML5.</video><p>Entenda como funcionam os desafios ao longo do jogo.</p></article>
+        <article class="video-card"><h3>Tutorial de instalação</h3><video controls preload="metadata"><source src="WhatsApp Video 2025-11-11 at 21.57.06.mp4" type="video/mp4">Seu navegador não suporta vídeo HTML5.</video><p>Veja o passo a passo para instalar o jogo.</p></article>
+      </div>
+      <div class="download-card">
+        <h3>Baixe ou jogue Ossos do Ofício</h3>
+        <p>Os links de download abaixo precisam apontar para os arquivos correspondentes na pasta do site.</p>
+        <div class="download-links">
+          <a class="button" href="seu_jogo.apk" download="Jogo_Botanica_Instalar.apk">Baixar jogo (APK)</a>
+          <a class="button" href="jogo_botanica_v1.0.rar" download="Jogo_Botanica_Instalar.rar">Baixar versão RAR</a>
+          <a class="button" href="https://beatrizminoura-cmyk.github.io/ossos-do-oficio/" target="_blank" rel="noopener noreferrer">Jogar versão web</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="recursos">
+      <div class="section-heading"><h2>Códigos e recursos</h2><p>Estrutura organizada dos principais eventos, ingredientes e informações técnicas do projeto.</p></div>
+
+      <div class="accordion-item">
+        <button class
