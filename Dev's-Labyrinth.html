@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+  <style>
+.gaveta-conteudo {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease;
+}
+
+.gaveta-conteudo.aberta {
+    max-height: 10000px;
+}
+</style>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,10 +22,10 @@
 
   <style>
     :root {
-      --bg: #1a1a1a;
-      --bg-soft: #111111;
-      --panel: #292929;
-      --panel-light: #3b3b3b;
+      --bg: #363636;
+      --bg-soft: #474747;
+      --panel: #212121;
+      --panel-light: #212121;
       --green: #8a8a8a;
       --green-light: #4a1717;
       --copper: #7d2525;
@@ -168,11 +179,18 @@
     .tab-panel p { margin-top: 18px; color: var(--muted); font-style: italic; }
 
     /* Vídeos e instalação */
-    .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+   .video-grid {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
     .video-card, .download-card, .code-panel { background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow); }
     .video-card h3, .download-card h3 { padding: 18px 20px; color: var(--copper-light); font: 700 17px "Montserrat", sans-serif; }
     .video-card video { width: 100%; aspect-ratio: 16 / 9; background: #050805; }
     .video-card p { padding: 14px 20px; color: var(--muted); }
+    .video-card {
+    width: 70%;
+}
     .download-card { margin-top: 25px; padding: 25px; }
     .download-card p { color: var(--muted); margin: 8px 0 16px; }
     .download-links { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -236,6 +254,62 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
     }
+
+
+/* Equipe e contatos no rodapé */
+.footer-contact-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.member-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+.member-photo {
+    width: 110px;
+    height: 125px;
+    min-width: 110px;
+    object-fit: cover;
+    background: #111;
+    border: 2px solid var(--copper);
+    border-radius: 6px;
+}
+
+.member-info {
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+.member-info h4 {
+    color: var(--copper-light);
+    margin-bottom: 8px;
+}
+
+.member-info p {
+    font-size: 13px;
+    margin: 5px 0;
+}
+
+@media (max-width: 700px) {
+    .footer-contact-list {
+        grid-template-columns: 1fr;
+    }
+
+    .member-photo {
+        width: 90px;
+        height: 110px;
+        min-width: 90px;
+    }
+}
+
   </style>
 </head>
 
@@ -248,7 +322,7 @@
       </div>
       <ul class="nav-links" id="navLinks">
         <li><a href="#prefacio">Prefácio</a></li>
-        <li><a href="#personagens">Personagens</a></li>
+        <li><a href="#personagens">Sprites</a></li>
         <li><a href="#storyboards">Storyboards</a></li>
         <li><a href="#tutoriais">Tutoriais</a></li>
         <li><a href="#recursos">Códigos e recursos</a></li>
@@ -260,7 +334,7 @@
   <div class="carousel" aria-label="Destaques do jogo">
     <div class="slides" id="slides">
       <div class="slide">
-        <img src="devs-labyrinth/images/cidade.png" alt="Cidade">
+        <img src="devs-labyrinth/images/Pátio Escolar Pixelado com Estudantes.png" alt="Cidade">
         <div class="slide-caption"><span class="eyebrow">Uma aventura de conhecimento</span><h1>Jogue já!</h1><p>Venha conosco se aventurar no universo de Dev's Labyrinth.</p></div>
       </div>
       <div class="slide">
@@ -268,16 +342,16 @@
         <div class="slide-caption"><span class="eyebrow"></span><h1></h1><p></p></div>
       </div>
       <div class="slide">
-        <img src="cenario.carros.jpeg" alt="Cenário com carros">
-        <div class="slide-caption"><span class="eyebrow">Aprenda jogando</span><h1>Vença os desafios</h1><p>Resolva desafios matemáticos, conheça elementos e ajude a salvar vidas.</p></div>
+        <img src="devs-labyrinth/images/humanoserobos.jpg" alt="Cenário com carros">
+        <div class="slide-caption"><span class="eyebrow"></span><h1></h1><p></p></div>
       </div>
       <div class="slide">
-        <img src="cenario.ponte.jpeg" alt="Cenário de uma ponte">
-        <div class="slide-caption"><span class="eyebrow">Conhecimento é a chave</span><h1>Ajude Abel</h1><p>Participe da criação de poções e descubra os mistérios da alquimia.</p></div>
+        <img src="devs-labyrinth/images/Confronto no campo de batalha.png" alt="Cenário de uma ponte">
+        <div class="slide-caption"><span class="eyebrow"></span><h1></h1><p></p></div>
       </div>
       <div class="slide">
-        <img src="cenario.apocalipse.jpeg" alt="Cenário do apocalipse">
-        <div class="slide-caption"><span class="eyebrow">O destino está em suas mãos</span><h1>Embarque na aventura</h1><p>Conheça o jogo e descubra se você consegue salvar o mundo.</p></div>
+        <img src="devs-labyrinth/images/carrosel3.png" alt="Cenário do apocalipse">
+        <div class="slide-caption"><span class="eyebrow"></span><h1></h1><p></p></div>
       </div>
     </div>
     <button class="carousel-arrow prev" id="prevSlide" aria-label="Imagem anterior">‹</button>
@@ -334,28 +408,29 @@
       <div class="story-grid">
         <div class="story-copy">
           <h3>Uma guerra, uma esperança</h3>
-          <p>Em um mundo onde humanos e robôs conviviam em harmonia, uma pequena cidade teve sua tranquilidade destruída após uma revolta das máquinas.</p>
-          <p>Dev's Labyrinth — O Último Sobrevivente é um projeto de jogo com temática de ficção científica, que explora um universo marcado por conflitos entre humanos e máquinas..</p>
-          <p class="question">Você acha que é capaz de salvar o mundo?</p>
+          <p>Em um mundo marcado pelo conflito entre humanos e máquinas, a humanidade enfrenta as consequências de uma guerra que mudou tudo. Cidades foram destruídas, tecnologias se voltaram contra seus criadores e a esperança de reconstruir a civilização parece cada vez mais distante.</p>
+          <p>Em meio ao caos, você se torna Justin: alguém que carrega consigo não apenas a própria sobrevivência, mas também a possibilidade de mudar o destino desse mundo.</p>
+<p>Sozinho em uma jornada cheia de desafios, você precisa explorar esse cenário devastado, enfrentar obstáculos e descobrir o que realmente aconteceu.</p>
+          <p class="question">Sua missão é simples, mas seu impacto pode ser enorme: sobreviver, descobrir a verdade e decidir o futuro da humanidade.</p>
         </div>
-        <div class="story-image"><img src="cenario.apocalipse.jpeg" alt="Paisagem do mundo durante o apocalipse"></div>
+        <div class="story-image"><img src="devs-labyrinth/images/personagem.png" alt="Personagem principal"></div>
       </div>
     </section>
 
     <section class="section" id="personagens">
-      <div class="section-heading"><h2>Personagens</h2><p>Conheça alguns dos aliados que fazem parte dessa jornada.</p></div>
+      <div class="section-heading"><h2>Sprites</h2><p>"Conheça nosso protagonista em sua representação visual dentro do jogo: a sprite do nosso player!"</p></div>
       <div class="character-grid">
         <article class="character-card">
-          <img src="devs-labyrinth/images/personagem" alt="Lílian, também chamada de Líli">
-          <div class="character-content"><h3>Lílian (Líli)</h3><p>Com 8 anos, ela é pura energia em miniatura.</p><button class="character-more" aria-expanded="false">Conhecer personagem +</button><div class="character-extra">Seu passatempo favorito é praticar esportes, especialmente pular corda e correr.</div></div>
+          <img src="devs-labyrinth/images/spritedireita.jpeg" alt="Lílian, também chamada de Líli">
+          <div class="character-content"><h3></h3><p></p><button class="character-more" aria-expanded="false"></button><div class="character-extra">Seu passatempo favorito é praticar esportes, especialmente pular corda e correr.</div></div>
         </article>
         <article class="character-card">
-          <img src="abel.jpeg" alt="Abel">
-          <div class="character-content"><h3>Abel</h3><p>Um cientista de 19 anos em busca de respostas.</p><button class="character-more" aria-expanded="false">Conhecer personagem +</button><div class="character-extra">Busca a verdade nas raízes da botânica e nos mistérios dos livros antigos de alquimia.</div></div>
+          <img src="devs-labyrinth/images/spritecostas.jpeg" alt="Abel">
+          <div class="character-content"><h3></h3><p></p><button class="character-more" aria-expanded="false"></button><div class="character-extra">Busca a verdade nas raízes da botânica e nos mistérios dos livros antigos de alquimia.</div></div>
         </article>
         <article class="character-card">
-          <img src="maite.jpeg" alt="Maitê">
-          <div class="character-content"><h3>Maitê</h3><p>Uma jovem de 21 anos de postura impecável.</p><button class="character-more" aria-expanded="false">Conhecer personagem +</button><div class="character-extra">Sua paixão é o combate, do foco no tiro ao alvo à intensidade da luta.</div></div>
+          <img src="devs-labyrinth/images/spriteesquerda.jpeg" alt="Maitê">
+          <div class="character-content"><h3></h3><p></p><button class="character-more" aria-expanded="false"></button><div class="character-extra">Sua paixão é o combate, do foco no tiro ao alvo à intensidade da luta.</div></div>
         </article>
       </div>
     </section>
@@ -366,9 +441,9 @@
         <button class="tab-button" role="tab" aria-selected="false" data-tab="story2">Storyboard 2</button>
         <button class="tab-button" role="tab" aria-selected="false" data-tab="story3">Storyboard 3</button>
       </div>
-      <div class="tab-panel active" id="story1" role="tabpanel"><h3>Personagem</h3><img src="devs-labyrinth/images/storyboard1.jpeg" alt="Storyboard 1"><p>“O início de um novo caminho se estende à sua frente. Terá coragem de encará-lo?”</p></div>
-      <div class="tab-panel" id="story2" role="tabpanel"><h3>Capa inicial</h3><img src="devs-labyrinth/images/storyboard2.jpeg" alt="Storyboard 2"><p>“Após conhecer a trama envolvente e o protagonista dedicado, prosseguimos para o desenrolar de um mundo ameaçado.”</p></div>
-      <div class="tab-panel" id="story3" role="tabpanel"><h3>A cidade</h3><img src="devs-labyrinth/images/storyboard3.jpeg" alt="Storyboard 3"><p>“O drama e a tensão lhe trouxeram até aqui, e você foi bravo ao nos acompanhar por essa jornada. Obrigado!”</p></div>
+      <div class="tab-panel active" id="story1" role="tabpanel"><h3>Personagem</h3><img src="devs-labyrinth/images/storyboard1.jpeg" alt="Storyboard 1"><p>“A primeira versão do nosso personagem”</p></div>
+      <div class="tab-panel" id="story2" role="tabpanel"><h3>Capa inicial</h3><img src="devs-labyrinth/images/storyboard2.jpeg" alt="Storyboard 2"><p>“O início de uma enorme guerra”</p></div>
+      <div class="tab-panel" id="story3" role="tabpanel"><h3>A cidade</h3><img src="devs-labyrinth/images/storyboard3.jpeg" alt="Storyboard 3"><p>“Uma vista panorâmica da cidade”</p></div>
     </section>
 
     <script>
@@ -396,28 +471,292 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
 </script>
 
     <section class="section" id="tutoriais">
       <div class="section-heading"><h2>Tutoriais</h2><p>Aprenda as mecânicas essenciais para se tornar um Boticário Viajante.</p></div>
       <div class="video-grid">
-        <article class="video-card"><h3>Gameplay: como funciona a jogabilidade?</h3><video controls preload="metadata"><source src="tutorial.jogabilidade.mp4" type="video/mp4">Seu navegador não suporta vídeo HTML5.</video><p>A precisão é crucial. Um erro nas proporções pode mudar o resultado!</p></article>
-        <article class="video-card"><h3>Tutorial das fases</h3><video controls preload="metadata"><source src="jogo (1) (1).mp4" type="video/mp4">Seu navegador não suporta vídeo HTML5.</video><p>Entenda como funcionam os desafios ao longo do jogo.</p></article>
-        <article class="video-card"><h3>Tutorial de instalação</h3><video controls preload="metadata"><source src="WhatsApp Video 2025-11-11 at 21.57.06.mp4" type="video/mp4">Seu navegador não suporta vídeo HTML5.</video><p>Veja o passo a passo para instalar o jogo.</p></article>
-      </div>
-      <div class="download-card">
-        <h3>Baixe ou jogue Ossos do Ofício</h3>
-        <p>Os links de download abaixo precisam apontar para os arquivos correspondentes na pasta do site.</p>
-        <div class="download-links">
-          <a class="button" href="seu_jogo.apk" download="Jogo_Botanica_Instalar.apk">Baixar jogo (APK)</a>
-          <a class="button" href="jogo_botanica_v1.0.rar" download="Jogo_Botanica_Instalar.rar">Baixar versão RAR</a>
-          <a class="button" href="https://beatrizminoura-cmyk.github.io/ossos-do-oficio/" target="_blank" rel="noopener noreferrer">Jogar versão web</a>
-        </div>
+        <article class="video-card"><h3>Gameplay: como funciona a jogabilidade?</h3><video controls preload="metadata"><source src="gameplay.mp4" type="video/mp4"></video><p></p></article>
+
       </div>
     </section>
 
     <section class="section" id="recursos">
-      <div class="section-heading"><h2>Códigos e recursos</h2><p>Estrutura organizada dos principais eventos, ingredientes e informações técnicas do projeto.</p></div>
+      <div class="section-heading"><h2>Código e Documento</h2><p>Estrutura organizada de um dos codigos do quizz e informações técnicas do projeto.</p></div>
 
-      <div class="accordion-item">
-        <button class
+ <p class="text-center text-muted"><em>Estrutura organizada dos principais scripts e assets do projeto.</em></p>
+            
+            <div class="panel-group" id="accordion">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="background-color: #1a1a1a;">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" style="color: white;">
+                                🤖 Estrutura do quizz(Achou?)
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse1" class="gaveta-conteudo">
+                        <div class="panel-body">
+                            <p>Este é um dos códigos que cuida da criação das questões.</p>
+                            <pre style="background-color: #000000;; border-color: #ddd;">
+                                
+var banco = global.quiz_banco[global.quiz_materia];
+
+var idx = [];
+for (var i = 0; i < array_length(banco); i++) array_push(idx, i);
+for (var i = array_length(idx) - 1; i > 0; i--) {
+    var j = irandom(i);
+    var t = idx[i]; idx[i] = idx[j]; idx[j] = t;
+}
+
+total_q = 7;
+acertos_meta = 4;
+perguntas = [];
+for (var k = 0; k < total_q; k++) array_push(perguntas, banco[idx[k]]);
+
+q_atual = 0;       // 0 a 6
+acertos = 0;
+estado = 0;        // 0 = respondendo, 1 = tela de resultado
+resultado = false;
+timer_fim = 0;
+texto = "";
+opcoes = [];
+correta = 0;
+
+prepara_pergunta = function() {
+    var q = perguntas[q_atual];
+    texto = q[0];
+
+    var ordem = [1, 2, 3, 4];   // 1 = correta, 2 a 4 = erradas
+    for (var i = 3; i > 0; i--) {
+        var j = irandom(i);
+        var t = ordem[i]; ordem[i] = ordem[j]; ordem[j] = t;
+    }
+
+    opcoes = [];
+    for (var i = 0; i < 4; i++) {
+        array_push(opcoes, q[ordem[i]]);
+        if (ordem[i] == 1) correta = i;
+    }
+}
+
+prepara_pergunta();
+
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                   <div class="panel-heading" style="background-color: #1a1a1a;">
+    <h4 class="panel-title">
+        <button type="button"
+        class="btn"
+        data-gaveta="#collapse1"
+        style="color: white; background: transparent;
+        border: none; width: 100%; text-align: left;">
+
+      🤖 Estrutura do quizz(Clicou!)
+</button>
+
+    </h4>
+</div>
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" style="color: white;">
+                                🗃️ Documento ABNT e GitHub(Achou?)
+                            </a>
+                        </h4>
+                    </div>
+                   <div id="collapse2" class="gaveta-conteudo">
+                        <div class="panel-body">
+                            <ul>
+                                <li>
+                                    <span class="glyphicon glyphicon-leaf"></span>
+                                    <div class="ingrediente-bloco">
+                                    </div>
+                                </li>
+                                <li>
+                                   <span class="glyphicon glyphicon-tint"></span>
+
+<span class="glyphicon glyphicon-tint"></span>
+
+<div class="ingrediente-bloco">
+    <a href="./documento-jogo-de-log.pdf"
+       target="_blank"
+       style="color: inherit; text-decoration: none;">
+        <strong>Abra o nosso documento aqui!</strong>
+    </a>
+</div>
+    
+      <a href="https://github.com/htegani/ifsp-jogo-log" target="_blank" style="color: inherit; text-decoration: none;">
+      <br><strong>Abra o GitHub</strong></a><br>
+</a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="glyphicon glyphicon-fire"></span>
+                                    <div class="ingrediente-bloco">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="panel-heading" style="background-color: #1a1a1a;">
+
+    <button type="button"
+            class="btn"
+            data-gaveta="#collapse2"
+            style="color: white; background: transparent;
+            border: none; width: 100%; text-align: left;">
+
+        🗃️ Documento ABNT e GitHub(Clicou!)
+
+    </button>
+
+</div>
+                    <div id="collapse3" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ol>
+
+                            <a href="https://beatrizminoura-cmyk.github.io/ossos-do-oficio/" target="_blank">Link para a Versão Web</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <hr>
+
+    <footer class="text-center footer-elegant">
+        <a class="up-arrow" href="#myPage" data-toggle="tooltip" title="TO TOP" aria-label="Voltar ao topo">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </a>
+        <br><br>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 footer-title-area">
+                    <h4>Desenvolvido por:</h4>
+                    <p class="project-tagline">Equipe de Desenvolvimento: Grupo 5</p>
+                </div>
+
+<div class="col-md-8 footer-contact-list">
+
+    <div class="member-card">
+        <img src="devs-labyrinth/images/amanda.png" alt="Foto de Amanda" class="member-photo">
+        <div class="member-info">
+            <h4>Amanda Gabas Delfino de Oliveira</h4>
+            <p>E-mail: amanda.gabas@aluno.ifsp.edu.br</p>
+            <p>Tel: (11) 93018-6243</p>
+        </div>
+    </div>
+
+    <div class="member-card">
+        <img src="devs-labyrinth/images/carol.png" alt="Foto de Carolina" class="member-photo">
+        <div class="member-info">
+            <h4>Carolina de Oliveira</h4>
+            <p>E-mail: cwbcarolinaoliveira@yahoo.com</p>
+            <p>Tel: (11) 98197-9575</p>
+        </div>
+    </div>
+
+    <div class="member-card">
+        <img src="devs-labyrinth/images/heitor.png" alt="Foto de Heitor" class="member-photo">
+        <div class="member-info">
+            <h4>Heitor Freire Tegani</h4>
+            <p>E-mail: heitor.tegani@aluno.ifsp.edu.br</p>
+            <p>Tel: (11) 96923-1023</p>
+        </div>
+    </div>
+
+    <div class="member-card">
+        <img src="devs-labyrinth/images/nicole.png" alt="Foto de Nicole" class="member-photo">
+        <div class="member-info">
+            <h4>Nicole Bali Ferreira</h4>
+            <p>E-mail:00001129995070sp@al.educacao.sp.gov.br</p>
+            <p>Tel: (11) 93776-8664</p>
+        </div>
+    </div>
+
+    <div class="member-card">
+        <img src="devs-labyrinth/images/anabeatriz.png" alt="Foto do quinto integrante" class="member-photo">
+        <div class="member-info">
+            <h4>Ana Beatriz da Silva Borges</h4>
+            <p>E-mail: anabeatrizdasilvaborges@gmail.com</p>
+            <p>Tel: (11) 94187-4125</p>
+        </div>
+    </div>
+
+</div>
+
+        <div class="footer-bottom">
+            <hr class="footer-separator">
+            <p class="copyright-text">&copy; 2026. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function(){
+            // Inicializa a Dica Flutuante (Tooltip)
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Adiciona rolagem suave a todos os links da navbar + link do footer
+            // O código de smooth scrolling estava incompleto no original, mantendo a estrutura:
+            $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+                // Certifique-se de que this.hash tenha um valor antes de substituir o comportamento padrão
+                if (this.hash !== "") {
+                    // Impede o comportamento de clique padrão
+                    event.preventDefault();
+
+                    // Armazena o hash
+                    var hash = this.hash;
+
+                    // Usando o método animate() do jQuery para adicionar rolagem suave à página
+                    // O número 900 é a duração da animação (em milissegundos)
+                    $('html, body').animate({
+                        scrollTop: $(hash).offset().top
+                    }, 900, function(){
+
+                        // Adiciona o hash (#) à URL quando a rolagem estiver completa (comportamento de clique)
+                        window.location.hash = hash;
+                    });
+                } // Fim do if
+            });
+            
+            // Script para fechar o menu colapsado após o clique em um link (opcional, mas comum)
+             $('.navbar-nav a').on('click', function(){
+                if ($('.navbar-collapse').hasClass('in')) {
+                    $('.navbar-collapse').collapse('hide');
+                }
+            });
+        });
+    </script>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    document.querySelectorAll("[data-gaveta]").forEach(function(botao) {
+
+        botao.addEventListener("click", function() {
+
+            const seletor = botao.getAttribute("data-gaveta");
+            const conteudo = document.querySelector(seletor);
+
+            if (conteudo) {
+                conteudo.classList.toggle("aberta");
+            }
+
+        });
+
+    });
+
+});
+</script>
+
+</body>
+</html>
